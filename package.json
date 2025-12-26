@@ -1,0 +1,10 @@
+{
+  "name": "gather-hub",
+  "version": "1.0.0",
+  "scripts": {
+    "bump-version": "node scripts/bump-version.js"
+  },
+  "devDependencies": {
+    "simple-git": "^3.20.0"
+  }
+}
