@@ -1,12 +1,14 @@
 {
   "manifest_version": 3,
-  "default_locale": "pt_br",
+  "default_locale": "en",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
   "version": "1.2.0",
   "permissions": [
     "storage",
-    "notifications"
+    "notifications",
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "*://cdn.gather.town/*",
