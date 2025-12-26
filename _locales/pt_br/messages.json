@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Gather Hub",
+    "description": "Nome da extensão"
+  },
+  "extensionDescription": {
+    "message": "Central de notificações para Gather.town",
+    "description": "Descrição da extensão"
+  }
+}
+
