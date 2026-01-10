@@ -1,26 +1,43 @@
 {
   "manifest_version": 3,
-  "default_locale": "en",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.2.0",
+  "version": "1.0.0",
+
+  "default_locale": "pt_BR",
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+
   "permissions": [
-    "storage",
     "notifications",
-    "scripting",
-    "tabs"
+    "tabs",
+    "activeTab",
+    "storage",
+    "offscreen"
   ],
+
   "host_permissions": [
-    "*://cdn.gather.town/*",
-    "*://gather.town/*",
-    "*://app.gather.town/*",
     "*://app.v2.gather.town/*"
   ],
+
   "content_scripts": [
     {
       "matches": [
-        "*://gather.town/*",
-        "*://app.gather.town/*",
         "*://app.v2.gather.town/*"
       ],
       "js": [
@@ -29,20 +46,9 @@
       "run_at": "document_idle"
     }
   ],
+
   "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
-  },
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "service_worker": "background.js",
+    "type": "module"
   }
 }

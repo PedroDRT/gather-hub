@@ -4,56 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gather Hub</title>
-    <link rel="stylesheet" href="assets/css/popup.css">
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="header-user">
-                <img id="userAvatar" src="assets/images/avatar-gather-hub.png" alt="Avatar">
-                <span id="userName">Gather Hub</span>
-            </div>
-            <div class="header-settings">
-                <button class="settings-icon-btn" id="settingsMenuBtn" aria-label="Configurações">
-                    <svg width="20" height="20" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z" fill="currentColor"/>
-                    </svg>
-                </button>
-                <div class="settings-menu" id="settingsMenu" style="display: none;">
-                    <button class="settings-menu-item" data-action="language">
-                        <span>Linguagem</span>
-                    </button>
-                    <button class="settings-menu-item" data-action="theme">
-                        <span>Tema</span>
-                    </button>
-                </div>
+                <img id="user-avatar" src="assets/images/avatar-gather-hub.png" alt="Avatar">
+                <span id="user-name">Gather Hub</span>
             </div>
         </div>
         <div class="content">
             <div class="content-header">
                 <div class="segmented-control">
-                    <button class="segment-button active" data-value="settings" aria-label="Settings">
-                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/></svg>
-                        <span>Configurações</span>
+                    <button class="segment-button active" data-value="notifications" aria-label="Notifications">
+                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M320 64C302.3 64 288 78.3 288 96L288 99.2C215 114 160 178.6 160 256L160 277.7C160 325.8 143.6 372.5 113.6 410.1L103.8 422.3C98.7 428.6 96 436.4 96 444.5C96 464.1 111.9 480 131.5 480L508.4 480C528 480 543.9 464.1 543.9 444.5C543.9 436.4 541.2 428.6 536.1 422.3L526.3 410.1C496.4 372.5 480 325.8 480 277.7L480 256C480 178.6 425 114 352 99.2L352 96C352 78.3 337.7 64 320 64zM258 528C265.1 555.6 290.2 576 320 576C349.8 576 374.9 555.6 382 528L258 528z"/></svg>
+                        <span>Notificações</span>
                     </button>
                     <button class="segment-button" data-value="audio" aria-label="Audio">
                         <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M533.6 96.5C523.3 88.1 508.2 89.7 499.8 100C491.4 110.3 493 125.4 503.3 133.8C557.5 177.8 592 244.8 592 320C592 395.2 557.5 462.2 503.3 506.3C493 514.7 491.5 529.8 499.8 540.1C508.1 550.4 523.3 551.9 533.6 543.6C598.5 490.7 640 410.2 640 320C640 229.8 598.5 149.2 533.6 96.5zM473.1 171C462.8 162.6 447.7 164.2 439.3 174.5C430.9 184.8 432.5 199.9 442.8 208.3C475.3 234.7 496 274.9 496 320C496 365.1 475.3 405.3 442.8 431.8C432.5 440.2 431 455.3 439.3 465.6C447.6 475.9 462.8 477.4 473.1 469.1C516.3 433.9 544 380.2 544 320.1C544 260 516.3 206.3 473.1 171.1zM412.6 245.5C402.3 237.1 387.2 238.7 378.8 249C370.4 259.3 372 274.4 382.3 282.8C393.1 291.6 400 305 400 320C400 335 393.1 348.4 382.3 357.3C372 365.7 370.5 380.8 378.8 391.1C387.1 401.4 402.3 402.9 412.6 394.6C434.1 376.9 448 350.1 448 320C448 289.9 434.1 263.1 412.6 245.5zM80 416L128 416L262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416z"/></svg>
                         <span>Audio</span>
                     </button>
-                    <button class="segment-button" data-value="profile" aria-label="Profile">
+                    <button class="segment-button" data-value="bind" aria-label="Bind">
                         <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"/></svg>
-                        <span>Perfil</span>
+                        <span>Bind</span>
                     </button>
                 </div>
             </div>
 
             <div class="content-body">
-                <div class="content-body-settings">
-                    <div class="settings-section">
-                        <h2 class="settings-title">Configurações Rápidas</h2>
-                        
-                        <div class="setting-item">
-                            <div class="setting-info">
+                <div class="content-body-notifications">
+                    <div class="notifications-section">
+                        <div class="notifications-item">
+                            <div class="notifications-info">
                                 <label class="setting-label">Notificações de <strong>Acenar</strong></label>
                                 <span class="setting-description">Receba notificações quando alguém acenar para você no <strong>Gather</strong></span>
                             </div>
@@ -63,8 +46,8 @@
                             </label>
                         </div>
                         
-                        <div class="setting-item">
-                            <div class="setting-info">
+                        <div class="notifications-item">
+                            <div class="notifications-info">
                                 <label class="setting-label">Notificações de <strong>Chat</strong></label>
                                 <span class="setting-description">Receba notificações quando receber mensagens no chat do <strong>Gather</strong></span>
                             </div>
@@ -74,8 +57,8 @@
                             </label>
                         </div>
                         
-                        <div class="setting-item">
-                            <div class="setting-info">
+                        <div class="notifications-item">
+                            <div class="notifications-info">
                                 <label class="setting-label">Notificações de <strong>Chamada</strong></label>
                                 <span class="setting-description">Receba notificações quando alguém iniciar uma chamada no <strong>Gather</strong></span>
                             </div>
@@ -85,8 +68,8 @@
                             </label>
                         </div>
                         
-                        <div class="setting-item">
-                            <div class="setting-info">
+                        <div class="notifications-item">
+                            <div class="notifications-info">
                                 <label class="setting-label">Notificações de <strong>Calendário Google</strong></label>
                                 <span class="setting-description">Receba notificações de eventos do <strong>Google Calendar</strong> antes do início</span>
                             </div>
@@ -96,12 +79,12 @@
                             </label>
                         </div>
                         
-                        <div class="setting-item calendar-timing" id="calendarTimingContainer" style="display: none;">
-                            <div class="setting-info">
-                                <label class="setting-label">Tempo de Antecedência</label>
-                                <span class="setting-description">Quanto tempo antes do evento você deseja ser notificado</span>
+                        <div class="notifications-item calendar-timing" id="calendarTimingContainer" style="display: none;">
+                            <div class="notifications-info">
+                                <label class="notifications-label">Tempo de Antecedência</label>
+                                <span class="notifications-description">Quanto tempo antes do evento você deseja ser notificado</span>
                             </div>
-                            <select id="calendarNotificationTiming" class="setting-select">
+                            <select id="calendarNotificationTiming" class="notifications-select">
                                 <option value="0">0 minutos</option>
                                 <option value="1">1 minuto</option>
                                 <option value="2">2 minutos</option>
@@ -114,8 +97,6 @@
                 </div>
                 <div class="content-body-audio" style="display: none;">
                     <div class="settings-section">
-                        <h2 class="settings-title">Configurações de Áudio</h2>
-                        
                         <div class="audio-setting-item">
                             <div class="setting-info">
                                 <label class="setting-label">Notificações de <strong>Acenar</strong></label>
@@ -192,7 +173,6 @@
                 <div class="content-body-profile" style="display: none;">
                     <div class="content-body-profile-item">
                         <div class="content-body-profile-item-title">
-                            <h2>Perfil</h2>
                         </div>
                     </div>
                 </div>

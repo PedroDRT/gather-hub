@@ -3,9 +3,194 @@
     "message": "Gather Hub",
     "description": "Extension name"
   },
+
   "extensionDescription": {
     "message": "Notification center for Gather.town",
     "description": "Extension description"
+  },
+  
+  "hello": {
+    "message": "Hello",
+    "description": "Greeting"
+  },
+  
+  "notificationsWaveLabel": {
+    "message": "<strong>Wave</strong> Notifications",
+    "description": "Label for wave notifications"
+  },
+  
+  "notificationsWaveDescription": {
+    "message": "Receive notifications when someone waves at you on <strong>Gather</strong>",
+    "description": "Description for wave notifications"
+  },
+  
+  "notificationsChatLabel": {
+    "message": "<strong>Chat</strong> Notifications",
+    "description": "Label for chat notifications"
+  },
+  
+  "notificationsChatDescription": {
+    "message": "Receive notifications when you receive messages in <strong>Gather</strong> chat",
+    "description": "Description for chat notifications"
+  },
+  
+  "notificationsCallLabel": {
+    "message": "<strong>Call</strong> Notifications",
+    "description": "Label for call notifications"
+  },
+  
+  "notificationsCallDescription": {
+    "message": "Receive notifications when someone starts a call on <strong>Gather</strong>",
+    "description": "Description for call notifications"
+  },
+  
+  "notificationsCalendarLabel": {
+    "message": "<strong>Google Calendar</strong> Notifications",
+    "description": "Label for calendar notifications"
+  },
+  
+  "notificationsCalendarDescription": {
+    "message": "Receive notifications for <strong>Google Calendar</strong> events before they start",
+    "description": "Description for calendar notifications"
+  },
+  
+  "calendarTimingLabel": {
+    "message": "Advance Time",
+    "description": "Label for calendar advance time"
+  },
+  
+  "calendarTimingDescription": {
+    "message": "How long before the event do you want to be notified",
+    "description": "Description for advance time"
+  },
+  
+  "minutes": {
+    "message": "minutes",
+    "description": "Word minutes"
+  },
+  
+  "minute": {
+    "message": "minute",
+    "description": "Word minute (singular)"
+  },
+  
+  "navNotifications": {
+    "message": "Notifications",
+    "description": "Navigation menu - Notifications"
+  },
+  
+  "navAudio": {
+    "message": "Audio",
+    "description": "Navigation menu - Audio"
+  },
+  
+  "navBind": {
+    "message": "Bind",
+    "description": "Navigation menu - Bind"
+  },
+  
+  "audioWaveLabel": {
+    "message": "<strong>Wave</strong> Notifications",
+    "description": "Audio label for wave notifications"
+  },
+  
+  "audioWaveDescription": {
+    "message": "Select the audio for wave notifications",
+    "description": "Audio description for wave notifications"
+  },
+  
+  "audioChatLabel": {
+    "message": "<strong>Chat</strong> Notifications",
+    "description": "Audio label for chat notifications"
+  },
+  
+  "audioChatDescription": {
+    "message": "Select the audio for chat notifications",
+    "description": "Audio description for chat notifications"
+  },
+  
+  "audioCallLabel": {
+    "message": "<strong>Call</strong> Notifications",
+    "description": "Audio label for call notifications"
+  },
+  
+  "audioCallDescription": {
+    "message": "Select the audio for call notifications",
+    "description": "Audio description for call notifications"
+  },
+  
+  "audioCalendarLabel": {
+    "message": "<strong>Google Calendar</strong> Notifications",
+    "description": "Audio label for calendar notifications"
+  },
+  
+  "audioCalendarDescription": {
+    "message": "Select the audio for calendar notifications",
+    "description": "Audio description for calendar notifications"
+  },
+  
+  "testAudio": {
+    "message": "Test audio",
+    "description": "Aria label for test audio button"
+  },
+  
+  "audioDefault": {
+    "message": "Default",
+    "description": "Default audio name"
+  },
+  
+  "audioClassic": {
+    "message": "Classic",
+    "description": "Classic audio name"
+  },
+  
+  "audioSoft": {
+    "message": "Soft",
+    "description": "Soft audio name"
+  },
+  
+  "audioModern": {
+    "message": "Modern",
+    "description": "Modern audio name"
+  },
+  
+  "audioEnergetic": {
+    "message": "Energetic",
+    "description": "Energetic audio name"
+  },
+  
+  "waveNotificationTitle": {
+    "message": "Wave",
+    "description": "Wave notification title"
+  },
+  
+  "waveNotificationMessage": {
+    "message": "waved to you",
+    "description": "Wave notification message"
+  },
+  
+  "chatNotificationTitle": {
+    "message": "Chat",
+    "description": "Chat notification title"
+  },
+  
+  "chatNotificationMessage": {
+    "message": "sent a message",
+    "description": "Chat notification message"
+  },
+  
+  "calendarNotificationTitle": {
+    "message": "Calendar",
+    "description": "Calendar notification title"
+  },
+  
+  "calendarNotificationMessage": {
+    "message": "Event in {minutes} minutes",
+    "description": "Calendar notification message"
+  },
+  
+  "someone": {
+    "message": "Someone",
+    "description": "Word someone"
   }
 }
-

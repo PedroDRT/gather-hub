@@ -1,0 +1,196 @@
+{
+  "extensionName": {
+    "message": "Gather Hub",
+    "description": "Nome da extensão"
+  },
+  
+  "extensionDescription": {
+    "message": "Central de notificações para Gather.town",
+    "description": "Descrição da extensão"
+  },
+  
+  "hello": {
+    "message": "Olá",
+    "description": "Saudação"
+  },
+  
+  "notificationsWaveLabel": {
+    "message": "Notificações de <strong>Acenar</strong>",
+    "description": "Label para notificações de acenar"
+  },
+  
+  "notificationsWaveDescription": {
+    "message": "Receba notificações quando alguém acenar para você no <strong>Gather</strong>",
+    "description": "Descrição para notificações de acenar"
+  },
+  
+  "notificationsChatLabel": {
+    "message": "Notificações de <strong>Chat</strong>",
+    "description": "Label para notificações de chat"
+  },
+  
+  "notificationsChatDescription": {
+    "message": "Receba notificações quando receber mensagens no chat do <strong>Gather</strong>",
+    "description": "Descrição para notificações de chat"
+  },
+  
+  "notificationsCallLabel": {
+    "message": "Notificações de <strong>Chamada</strong>",
+    "description": "Label para notificações de chamada"
+  },
+  
+  "notificationsCallDescription": {
+    "message": "Receba notificações quando alguém iniciar uma chamada no <strong>Gather</strong>",
+    "description": "Descrição para notificações de chamada"
+  },
+  
+  "notificationsCalendarLabel": {
+    "message": "Notificações de <strong>Calendário Google</strong>",
+    "description": "Label para notificações de calendário"
+  },
+  
+  "notificationsCalendarDescription": {
+    "message": "Receba notificações de eventos do <strong>Google Calendar</strong> antes do início",
+    "description": "Descrição para notificações de calendário"
+  },
+  
+  "calendarTimingLabel": {
+    "message": "Tempo de Antecedência",
+    "description": "Label para tempo de antecedência do calendário"
+  },
+  
+  "calendarTimingDescription": {
+    "message": "Quanto tempo antes do evento você deseja ser notificado",
+    "description": "Descrição para tempo de antecedência"
+  },
+  
+  "minutes": {
+    "message": "minutos",
+    "description": "Palavra minutos"
+  },
+  
+  "minute": {
+    "message": "minuto",
+    "description": "Palavra minuto (singular)"
+  },
+  
+  "navNotifications": {
+    "message": "Notificações",
+    "description": "Menu de navegação - Notificações"
+  },
+  
+  "navAudio": {
+    "message": "Audio",
+    "description": "Menu de navegação - Audio"
+  },
+  
+  "navBind": {
+    "message": "Bind",
+    "description": "Menu de navegação - Bind"
+  },
+  
+  "audioWaveLabel": {
+    "message": "Notificações de <strong>Acenar</strong>",
+    "description": "Label de áudio para notificações de acenar"
+  },
+  
+  "audioWaveDescription": {
+    "message": "Selecione o áudio para notificações de acenar",
+    "description": "Descrição de áudio para notificações de acenar"
+  },
+  
+  "audioChatLabel": {
+    "message": "Notificações de <strong>Chat</strong>",
+    "description": "Label de áudio para notificações de chat"
+  },
+  
+  "audioChatDescription": {
+    "message": "Selecione o áudio para notificações de chat",
+    "description": "Descrição de áudio para notificações de chat"
+  },
+  
+  "audioCallLabel": {
+    "message": "Notificações de <strong>Chamada</strong>",
+    "description": "Label de áudio para notificações de chamada"
+  },
+  
+  "audioCallDescription": {
+    "message": "Selecione o áudio para notificações de chamada",
+    "description": "Descrição de áudio para notificações de chamada"
+  },
+  
+  "audioCalendarLabel": {
+    "message": "Notificações de <strong>Calendário Google</strong>",
+    "description": "Label de áudio para notificações de calendário"
+  },
+  
+  "audioCalendarDescription": {
+    "message": "Selecione o áudio para notificações de calendário",
+    "description": "Descrição de áudio para notificações de calendário"
+  },
+  
+  "testAudio": {
+    "message": "Testar áudio",
+    "description": "Aria label para botão de testar áudio"
+  },
+  
+  "audioDefault": {
+    "message": "Padrão",
+    "description": "Nome do áudio padrão"
+  },
+  
+  "audioClassic": {
+    "message": "Clássico",
+    "description": "Nome do áudio clássico"
+  },
+  
+  "audioSoft": {
+    "message": "Suave",
+    "description": "Nome do áudio suave"
+  },
+  
+  "audioModern": {
+    "message": "Moderno",
+    "description": "Nome do áudio moderno"
+  },
+  
+  "audioEnergetic": {
+    "message": "Energético",
+    "description": "Nome do áudio energético"
+  },
+  
+  "waveNotificationTitle": {
+    "message": "Acenar",
+    "description": "Título da notificação de acenar"
+  },
+  
+  "waveNotificationMessage": {
+    "message": "acenou para você",
+    "description": "Mensagem da notificação de acenar"
+  },
+  
+  "chatNotificationTitle": {
+    "message": "Chat",
+    "description": "Título da notificação de chat"
+  },
+  
+  "chatNotificationMessage": {
+    "message": "enviou uma mensagem",
+    "description": "Mensagem da notificação de chat"
+  },
+  
+  "calendarNotificationTitle": {
+    "message": "Calendário",
+    "description": "Título da notificação de calendário"
+  },
+  
+  "calendarNotificationMessage": {
+    "message": "Evento em {minutes} minutos",
+    "description": "Mensagem da notificação de calendário"
+  },
+  
+  "someone": {
+    "message": "Alguém",
+    "description": "Palavra alguém"
+  }
+}
