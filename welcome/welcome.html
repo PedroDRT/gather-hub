@@ -1,11 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gather Hub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao Gather Hub</title>
+    <link rel="stylesheet" href="welcome.css">
 </head>
 <body>
-  <h2>Teste</h2>
+    <div class="welcome-container">
+        <!-- Header com Logo -->
+        <div class="welcome-header">
+            <div class="logo-container">
+                <img src="../assets/icons/icon128.png" alt="Gather Hub Logo" class="logo">
+                <h1 class="welcome-title">Gather Hub</h1>
+            </div>
+            <p class="welcome-subtitle">Central de Notificações para Gather.town</p>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="welcome-content">
+            <!-- Mensagem de Boas-vindas -->
+            <div class="welcome-section">
+                <div class="welcome-icon">🎉</div>
+                <h2 class="section-title">Bem-vindo!</h2>
+                <p class="section-description">
+                    Você instalou com sucesso o <strong>Gather Hub</strong>, sua central de notificações inteligente para o Gather.town.
+                </p>
+            </div>
+
+            <!-- Funcionalidades -->
+            <div class="features-section">
+                <h3 class="features-title">Principais Funcionalidades</h3>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <div class="feature-content">
+                        <h4 class="feature-title">Notificações Inteligentes</h4>
+                        <p class="feature-description">
+                            Receba alertas quando alguém acenar para você, enviar mensagens no chat, iniciar chamadas ou quando houver eventos no Google Calendar.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <div class="feature-content">
+                        <h4 class="feature-title">Áudios Personalizados</h4>
+                        <p class="feature-description">
+                            Escolha entre 5 áudios diferentes para cada tipo de notificação. Teste antes de salvar e personalize sua experiência.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-content">
+                        <h4 class="feature-title">Multi-idioma</h4>
+                        <p class="feature-description">
+                            Suporte completo para Português, Inglês e Espanhol. A interface se adapta automaticamente ao seu idioma.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <div class="feature-content">
+                        <h4 class="feature-title">Configuração Fácil</h4>
+                        <p class="feature-description">
+                            Interface moderna e intuitiva. Configure tudo em poucos cliques através do popup da extensão.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passos Rápidos -->
+            <div class="steps-section">
+                <h3 class="steps-title">Como Começar</h3>
+                
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4 class="step-title">Acesse o Gather.town</h4>
+                        <p class="step-description">Abra ou navegue até app.v2.gather.town</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4 class="step-title">Abra o Popup</h4>
+                        <p class="step-description">Clique no ícone do Gather Hub na barra de ferramentas</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4 class="step-title">Configure as Notificações</h4>
+                        <p class="step-description">Ative os tipos de notificação que deseja receber</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4 class="step-title">Personalize os Áudios</h4>
+                        <p class="step-description">Escolha seus sons favoritos na aba "Áudio"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica -->
+            <div class="tip-section">
+                <div class="tip-icon">💡</div>
+                <div class="tip-content">
+                    <h4 class="tip-title">Dica Pro</h4>
+                    <p class="tip-description">
+                        Configure o tempo de antecedência para eventos do Google Calendar (0-5 minutos) para nunca mais perder um evento importante!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer com Botões -->
+        <div class="welcome-footer">
+            <button id="getStartedBtn" class="btn btn-primary">
+                Começar Agora
+            </button>
+            <button id="skipBtn" class="btn btn-secondary">
+                Pular Introdução
+            </button>
+        </div>
+    </div>
+
+    <script src="welcome.js"></script>
 </body>
 </html>
