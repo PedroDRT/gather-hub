@@ -1,4 +1,3 @@
-// Variáveis globais
 let hasNotification = false;
 let offscreenCreated = false;
 let gatherTabs = new Set();
@@ -43,7 +42,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   gatherTabs.delete(tabId);
 });
 
-// Quando uma aba do Gather fica ativa, limpa notificações
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   try {
     const tab = await chrome.tabs.get(activeInfo.tabId);
@@ -60,7 +58,6 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   }
 });
 
-// Atualiza badge do ícone
 function updateBadge() {
   chrome.storage.local.get(['isConcentrationMode'], (result) => {
     const isConcentrationMode = result.isConcentrationMode || false;
@@ -77,9 +74,7 @@ function updateBadge() {
   });
 }
 
-// Cria offscreen document para reprodução de áudio
 async function createOffscreen() {
-  // Verifica se já existe
   if (chrome.offscreen && chrome.offscreen.hasDocument) {
     const exists = await chrome.offscreen.hasDocument();
     if (exists) {
@@ -101,12 +96,10 @@ async function createOffscreen() {
   }
 }
 
-// Reproduz som de notificação
 async function playNotificationSound(notificationType = 'wave') {
   try {
     await createOffscreen();
     
-    // Obtém o áudio configurado para este tipo
     chrome.storage.local.get([`${notificationType}Audio`], (result) => {
       const audioFile = result[`${notificationType}Audio`] || 'gather-notificator-audio.mp3';
       
@@ -123,7 +116,6 @@ async function playNotificationSound(notificationType = 'wave') {
   }
 }
 
-// Para o som de notificação
 async function stopNotificationSound() {
   try {
     if (offscreenCreated) {
@@ -136,7 +128,6 @@ async function stopNotificationSound() {
   }
 }
 
-// Processa notificações detectadas
 function handleNotification(data) {
   const { type, message, userName, minutes } = data;
 
@@ -146,12 +137,10 @@ function handleNotification(data) {
     'enableCalendar', 
     'isConcentrationMode'
   ], (result) => {
-    // Verifica se está em modo concentração
     if (result.isConcentrationMode) {
       return;
     }
 
-    // Verifica se o tipo de notificação está habilitado
     let isEnabled = false;
     let title = '';
     let notificationMessage = '';
@@ -194,7 +183,6 @@ function handleNotification(data) {
       return;
     }
 
-    // Cria notificação do Chrome
     chrome.notifications.create({
       type: 'basic',
       iconUrl: chrome.runtime.getURL('assets/icons/icon48.png'),
@@ -202,7 +190,6 @@ function handleNotification(data) {
       message: notificationMessage
     });
 
-    // Atualiza estado
     hasNotification = true;
     updateBadge();
     playNotificationSound(type);
@@ -210,10 +197,8 @@ function handleNotification(data) {
   });
 }
 
-// Handler de clique na notificação
 chrome.notifications.onClicked.addListener(async (notificationId) => {
   try {
-    // Procura aba do Gather
     const tabs = await chrome.tabs.query({});
     const gatherTab = tabs.find(tab => 
       tab.url && tab.url.includes('app.v2.gather.town')
@@ -229,7 +214,6 @@ chrome.notifications.onClicked.addListener(async (notificationId) => {
       });
     }
     
-    // Limpa notificação
     chrome.notifications.clear(notificationId);
     hasNotification = false;
     updateBadge();
@@ -240,7 +224,6 @@ chrome.notifications.onClicked.addListener(async (notificationId) => {
   }
 });
 
-// Recebe mensagens do content script e outros
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'notificationDetected') {
     handleNotification(message);
@@ -255,7 +238,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
-// Restaura estado na inicialização
 chrome.runtime.onStartup.addListener(() => {
   chrome.storage.local.get(['hasNotification'], (result) => {
     hasNotification = result.hasNotification || false;

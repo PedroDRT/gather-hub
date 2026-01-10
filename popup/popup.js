@@ -52,16 +52,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (svgElement) {
             parent.replaceChild(svgElement, userAvatar);
           } else {
-            userAvatar.src = 'assets/images/avatar-gather-hub.png';
+            userAvatar.src = '../assets/icons/icon128.png';
           }
         } else {
           userAvatar.src = stored.gatherUserAvatar;
           userAvatar.onerror = () => {
-            userAvatar.src = 'assets/images/avatar-gather-hub.png';
+            userAvatar.src = '../assets/icons/icon128.png';
           };
         }
       } else {
-        userAvatar.src = 'assets/images/avatar-gather-hub.png';
+        userAvatar.src = '../assets/icons/icon128.png';
       }
     } catch (error) {
       console.error('Erro ao carregar informações do usuário:', error);
