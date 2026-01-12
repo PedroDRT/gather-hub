@@ -30,8 +30,23 @@ function playNotificationSound(notificationType = 'wave', audioFile = 'gather-no
     currentAudio = new Audio(audioPath);
     currentAudio.volume = 0.7;
     
+    currentAudio.addEventListener('error', (e) => {
+      console.error('[GATHER-HUB] Erro no elemento de áudio:', {
+        error: e.error,
+        code: currentAudio.error?.code,
+        message: currentAudio.error?.message,
+        path: audioPath
+      });
+    });
+    
     currentAudio.play().catch(error => {
-      console.error('[GATHER-HUB] Erro ao reproduzir áudio:', error);
+      console.error('[GATHER-HUB] Erro ao reproduzir áudio:', {
+        name: error?.name,
+        message: error?.message,
+        code: error?.code,
+        error: error,
+        path: audioPath
+      });
     });
 
     currentAudio.addEventListener('ended', () => {
@@ -40,7 +55,12 @@ function playNotificationSound(notificationType = 'wave', audioFile = 'gather-no
 
     console.log('[GATHER-HUB] Som de notificação reproduzido:', notificationType, audioFile);
   } catch (error) {
-    console.error('[GATHER-HUB] Erro ao reproduzir som de notificação:', error);
+    console.error('[GATHER-HUB] Erro ao reproduzir som de notificação:', {
+      name: error?.name,
+      message: error?.message,
+      code: error?.code,
+      error: error
+    });
   }
 }
 

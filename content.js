@@ -128,6 +128,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 const notifiedCalendarEvents = new Set();
+const notifiedWaves = new Set();
+const notifiedChats = new Set();
 
 function checkTextForNotifications(textContent) {
   if(!textContent || textContent.trim().length === 0) {
@@ -181,14 +183,24 @@ function checkTextForNotifications(textContent) {
 
     chrome.storage.local.get(['enableWave'], (result) => {
       if (result.enableWave !== false) {
-        chrome.runtime.sendMessage({
-          action: 'notificationDetected',
-          type: 'wave',
-          message: textContent,
-          userName: userName
-        }).catch(error => {
-          console.error('[GATHER-HUB] Erro ao enviar notificação de wave:', error);
-        });
+        const waveId = `${userName || 'unknown'}_${textContent.substring(0, 100)}`;
+        
+        if (!notifiedWaves.has(waveId)) {
+          notifiedWaves.add(waveId);
+          
+          setTimeout(() => {
+            notifiedWaves.delete(waveId);
+          }, 300000);
+          
+          chrome.runtime.sendMessage({
+            action: 'notificationDetected',
+            type: 'wave',
+            message: textContent,
+            userName: userName
+          }).catch(error => {
+            console.error('[GATHER-HUB] Erro ao enviar notificação de wave:', error);
+          });
+        }
       }
     });
     return;
@@ -241,14 +253,24 @@ function checkTextForNotifications(textContent) {
 
     chrome.storage.local.get(['enableChat'], (result) => {
       if (result.enableChat !== false) {
-        chrome.runtime.sendMessage({
-          action: 'notificationDetected',
-          type: 'chat',
-          message: textContent,
-          userName: chatUserName
-        }).catch(error => {
-          console.error('[GATHER-HUB] Erro ao enviar notificação de chat:', error);
-        });
+        const chatId = `${chatUserName || 'unknown'}_${textContent.substring(0, 100)}`;
+        
+        if (!notifiedChats.has(chatId)) {
+          notifiedChats.add(chatId);
+          
+          setTimeout(() => {
+            notifiedChats.delete(chatId);
+          }, 300000);
+          
+          chrome.runtime.sendMessage({
+            action: 'notificationDetected',
+            type: 'chat',
+            message: textContent,
+            userName: chatUserName
+          }).catch(error => {
+            console.error('[GATHER-HUB] Erro ao enviar notificação de chat:', error);
+          });
+        }
       }
     });
     return;
