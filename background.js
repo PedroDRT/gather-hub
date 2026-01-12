@@ -1,5 +1,7 @@
 let hasNotification = false;
 let offscreenCreated = false;
+let offscreenCreating = false;
+let offscreenReady = false;
 let gatherTabs = new Set();
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -75,13 +77,36 @@ function updateBadge() {
 }
 
 async function createOffscreen() {
+  if (offscreenCreated && offscreenReady) {
+    return;
+  }
+
+  if (offscreenCreating) {
+    let attempts = 0;
+    while (offscreenCreating && attempts < 50) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+      if (offscreenCreated && offscreenReady) {
+        return;
+      }
+    }
+    return;
+  }
+
   if (chrome.offscreen && chrome.offscreen.hasDocument) {
-    const exists = await chrome.offscreen.hasDocument();
-    if (exists) {
-      offscreenCreated = true;
-      return;
+    try {
+      const exists = await chrome.offscreen.hasDocument();
+      if (exists) {
+        offscreenCreated = true;
+        offscreenReady = true;
+        return;
+      }
+    } catch (error) {
     }
   }
+
+  offscreenCreating = true;
+  offscreenReady = false;
 
   try {
     await chrome.offscreen.createDocument({
@@ -90,15 +115,39 @@ async function createOffscreen() {
       justification: 'Reproduzir som de notificação quando wave, chat ou calendário são detectados'
     });
     offscreenCreated = true;
+    
+    await new Promise(resolve => setTimeout(resolve, 200));
+    offscreenReady = true;
   } catch (error) {
-    console.error('[GATHER-HUB] Erro ao criar offscreen document:', error);
-    offscreenCreated = false;
+    const errorMessage = error.message || '';
+    if (errorMessage.includes('already exists') || 
+        errorMessage.includes('Only a single offscreen document may be created') ||
+        errorMessage.includes('single offscreen document')) {
+      offscreenCreated = true;
+      offscreenReady = true;
+    } else {
+      console.error('[GATHER-HUB] Erro ao criar offscreen document:', error);
+      offscreenCreated = false;
+      offscreenReady = false;
+    }
+  } finally {
+    offscreenCreating = false;
   }
 }
 
 async function playNotificationSound(notificationType = 'wave') {
   try {
     await createOffscreen();
+    
+    let attempts = 0;
+    while (!offscreenReady && attempts < 20) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+    
+    if (!offscreenReady) {
+      console.warn('[GATHER-HUB] Offscreen document não está pronto, tentando mesmo assim...');
+    }
     
     chrome.storage.local.get([`${notificationType}Audio`], (result) => {
       const audioFile = result[`${notificationType}Audio`] || 'gather-notificator-audio.mp3';
@@ -108,7 +157,18 @@ async function playNotificationSound(notificationType = 'wave') {
         notificationType: notificationType,
         audioFile: audioFile
       }).catch(error => {
-        console.error('[GATHER-HUB] Erro ao reproduzir som:', error);
+        if (error.message && error.message.includes('Receiving end does not exist')) {
+          console.warn('[GATHER-HUB] Offscreen document não está respondendo, recriando...');
+          offscreenCreated = false;
+          offscreenReady = false;
+          setTimeout(() => {
+            playNotificationSound(notificationType).catch(err => {
+              console.error('[GATHER-HUB] Erro ao reproduzir som após recriar:', err);
+            });
+          }, 500);
+        } else {
+          console.error('[GATHER-HUB] Erro ao reproduzir som:', error);
+        }
       });
     });
   } catch (error) {
@@ -118,9 +178,11 @@ async function playNotificationSound(notificationType = 'wave') {
 
 async function stopNotificationSound() {
   try {
-    if (offscreenCreated) {
+    if (offscreenCreated && offscreenReady) {
       chrome.runtime.sendMessage({ action: 'stopSound' }).catch(error => {
-        console.error('[GATHER-HUB] Erro ao parar som:', error);
+        if (!error.message || !error.message.includes('Receiving end does not exist')) {
+          console.error('[GATHER-HUB] Erro ao parar som:', error);
+        }
       });
     }
   } catch (error) {
@@ -233,6 +295,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     updateBadge();
     stopNotificationSound();
     chrome.storage.local.set({ hasNotification: false });
+    sendResponse({ success: true });
+  } else if (message.action === 'offscreenReady') {
+    offscreenReady = true;
     sendResponse({ success: true });
   }
   return true;

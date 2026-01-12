@@ -4,7 +4,6 @@ let currentAudio = null;
 console.log('[GATHER-HUB] Offscreen document carregado');
 
 chrome.runtime.sendMessage({ action: 'offscreenReady' }).catch((error) => {
-  console.log('[GATHER-HUB] Falha ao enviar mensagem de pronto:', error);
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -31,22 +30,9 @@ function playNotificationSound(notificationType = 'wave', audioFile = 'gather-no
     currentAudio.volume = 0.7;
     
     currentAudio.addEventListener('error', (e) => {
-      console.error('[GATHER-HUB] Erro no elemento de áudio:', {
-        error: e.error,
-        code: currentAudio.error?.code,
-        message: currentAudio.error?.message,
-        path: audioPath
-      });
     });
     
     currentAudio.play().catch(error => {
-      console.error('[GATHER-HUB] Erro ao reproduzir áudio:', {
-        name: error?.name,
-        message: error?.message,
-        code: error?.code,
-        error: error,
-        path: audioPath
-      });
     });
 
     currentAudio.addEventListener('ended', () => {
@@ -55,12 +41,6 @@ function playNotificationSound(notificationType = 'wave', audioFile = 'gather-no
 
     console.log('[GATHER-HUB] Som de notificação reproduzido:', notificationType, audioFile);
   } catch (error) {
-    console.error('[GATHER-HUB] Erro ao reproduzir som de notificação:', {
-      name: error?.name,
-      message: error?.message,
-      code: error?.code,
-      error: error
-    });
   }
 }
 
@@ -79,6 +59,5 @@ function stopNotificationSound() {
 
     console.log('[GATHER-HUB] Som de notificação parado');
   } catch (error) {
-    console.error('[GATHER-HUB] Erro ao parar som de notificação:', error);
   }
 }
