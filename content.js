@@ -131,6 +131,51 @@ const notifiedCalendarEvents = new Set();
 const notifiedWaves = new Set();
 const notifiedChats = new Set();
 
+function cleanUserName(rawName) {
+  let cleaned = rawName.replace(/\d{1,2}:\d{2}\s*(AM|PM)?/gi, '').trim();
+  cleaned = cleaned.replace(/\d+/g, '').trim();
+  
+  if (cleaned.length >= 2 && 
+      /^[A-ZÀ-Ÿ]{2}/.test(cleaned) && 
+      cleaned[0] === cleaned[1]) {
+    cleaned = cleaned.substring(1);
+  }
+  
+  const words = cleaned.split(/\s+/).filter(w => w.length > 0);
+  
+  if (words.length >= 2 && 
+      words[0].length === 1 && 
+      /^[a-zA-ZÀ-ÿ]$/.test(words[0]) &&
+      words[1].toLowerCase().startsWith(words[0].toLowerCase())) {
+    words.shift();
+  }
+  
+  if (words.length > 0) {
+    const possibleNames = [];
+    for (let i = Math.min(4, words.length); i >= 2; i--) {
+      const candidate = words.slice(-i).join(' ');
+      if (/^[a-zA-ZÀ-ÿ\s'-]+$/.test(candidate) && candidate.length <= 50) {
+        possibleNames.push(candidate);
+      }
+    }
+    
+    const userName = possibleNames.length > 0 ? possibleNames[0] : words.slice(-2).join(' ');
+    const finalName = userName.replace(/\s+/g, ' ').trim();
+    
+    if (finalName.length > 50 || !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(finalName)) {
+      const lastWord = words[words.length - 1];
+      if (lastWord && /^[a-zA-ZÀ-ÿ'-]+$/.test(lastWord)) {
+        return lastWord;
+      }
+    }
+    
+    const result = finalName || words.join(' ');
+    return result;
+  }
+
+  return cleaned;
+}
+
 function checkTextForNotifications(textContent) {
   if(!textContent || textContent.trim().length === 0) {
     return;
@@ -149,36 +194,7 @@ function checkTextForNotifications(textContent) {
 
   if (waveMatch) {
     if (waveMatch[1]) {
-      let rawName = waveMatch[1].trim();
-      
-      rawName = rawName.replace(/\d{1,2}:\d{2}\s*(AM|PM)?/gi, '').trim();
-      
-      rawName = rawName.replace(/\d+/g, '').trim();
-      
-      const words = rawName.split(/\s+/).filter(w => w.length > 0);
-      
-      if (words.length > 0) {
-        const possibleNames = [];
-        for (let i = Math.min(4, words.length); i >= 2; i--) {
-          const candidate = words.slice(-i).join(' ');
-          if (/^[a-zA-ZÀ-ÿ\s'-]+$/.test(candidate) && candidate.length <= 50) {
-            possibleNames.push(candidate);
-          }
-        }
-        
-        userName = possibleNames.length > 0 ? possibleNames[0] : words.slice(-2).join(' ');
-      } else {
-        userName = rawName;
-      }
-      
-      userName = userName.replace(/\s+/g, ' ').trim();
-      
-      if (userName.length > 50 || !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(userName)) {
-        const lastWord = words[words.length - 1];
-        if (lastWord && /^[a-zA-ZÀ-ÿ'-]+$/.test(lastWord)) {
-          userName = lastWord;
-        }
-      }
+      userName = cleanUserName(waveMatch[1]);
     }
 
     chrome.storage.local.get(['enableWave'], (result) => {
@@ -219,36 +235,7 @@ function checkTextForNotifications(textContent) {
 
   if (chatMatch) {
     if (chatMatch[1]) {
-      let rawName = chatMatch[1].trim();
-      
-      rawName = rawName.replace(/\d{1,2}:\d{2}\s*(AM|PM)?/gi, '').trim();
-      
-      rawName = rawName.replace(/\d+/g, '').trim();
-      
-      const words = rawName.split(/\s+/).filter(w => w.length > 0);
-      
-      if (words.length > 0) {
-        const possibleNames = [];
-        for (let i = Math.min(4, words.length); i >= 2; i--) {
-          const candidate = words.slice(-i).join(' ');
-          if (/^[a-zA-ZÀ-ÿ\s'-]+$/.test(candidate) && candidate.length <= 50) {
-            possibleNames.push(candidate);
-          }
-        }
-        
-        chatUserName = possibleNames.length > 0 ? possibleNames[0] : words.slice(-2).join(' ');
-      } else {
-        chatUserName = rawName;
-      }
-      
-      chatUserName = chatUserName.replace(/\s+/g, ' ').trim();
-      
-      if (chatUserName.length > 50 || !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(chatUserName)) {
-        const lastWord = words[words.length - 1];
-        if (lastWord && /^[a-zA-ZÀ-ÿ'-]+$/.test(lastWord)) {
-          chatUserName = lastWord;
-        }
-      }
+      chatUserName = cleanUserName(chatMatch[1]);
     }
 
     chrome.storage.local.get(['enableChat'], (result) => {
