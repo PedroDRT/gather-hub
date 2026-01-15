@@ -41,7 +41,11 @@
         "*://app.v2.gather.town/*"
       ],
       "js": [
+        "pinButton.js",
         "content.js"
+      ],
+      "css": [
+        "assets/shared/global.css"
       ],
       "run_at": "document_idle"
     }

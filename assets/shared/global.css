@@ -280,3 +280,16 @@
   --flkrk35m: rgba(0, 0, 0, .9);
   --flkrk35n: #000;
 }
+
+.fix-chat-gather-utilities > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fix-chat-gather-utilities {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
