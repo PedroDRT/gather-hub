@@ -176,7 +176,24 @@ function cleanUserName(rawName) {
   return cleaned;
 }
 
+function shouldIgnoreWaveNotification(callback) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs.length > 0) {
+      const activeTab = tabs[0];
+      const isGatherTab = activeTab.url && activeTab.url.includes('gather.town');
+      const hasChatInUrl = activeTab.url && activeTab.url.includes('/chat/');
+      
+      callback(isGatherTab && hasChatInUrl);
+    } else {
+      callback(false);
+    }
+  });
+}
+
 function checkTextForNotifications(textContent) {
+  const waveImageNotification = document.querySelector('.image-notification');
+  const chatImageNotification = document.querySelector('.image-notification');
+
   if(!textContent || textContent.trim().length === 0) {
     return;
   }
@@ -199,24 +216,30 @@ function checkTextForNotifications(textContent) {
 
     chrome.storage.local.get(['enableWave'], (result) => {
       if (result.enableWave !== false) {
-        const waveId = `${userName || 'unknown'}_${textContent.substring(0, 100)}`;
-        
-        if (!notifiedWaves.has(waveId)) {
-          notifiedWaves.add(waveId);
+        shouldIgnoreWaveNotification((shouldIgnore) => {
+          if (shouldIgnore) {
+            return;
+          }
           
-          setTimeout(() => {
-            notifiedWaves.delete(waveId);
-          }, 300000);
+          const waveId = `${userName || 'unknown'}_${textContent.substring(0, 100)}`;
           
-          chrome.runtime.sendMessage({
-            action: 'notificationDetected',
-            type: 'wave',
-            message: textContent,
-            userName: userName
-          }).catch(error => {
-            console.error('[GATHER-HUB] Erro ao enviar notificação de wave:', error);
-          });
-        }
+          if (!notifiedWaves.has(waveId)) {
+            notifiedWaves.add(waveId);
+            
+            setTimeout(() => {
+              notifiedWaves.delete(waveId);
+            }, 300000);
+            
+            chrome.runtime.sendMessage({
+              action: 'notificationDetected',
+              type: 'wave',
+              message: textContent,
+              userName: userName
+            }).catch(error => {
+              console.error('[GATHER-HUB] Erro ao enviar notificação de wave:', error);
+            });
+          }
+        });
       }
     });
     return;
