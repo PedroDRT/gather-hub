@@ -73,7 +73,7 @@ function init() {
   if(!toolbarContainer) {
     toolbarContainer = document.querySelector('._2owp20p._2owp20r');
   }
-  
+
   if (toolbarContainer) {
     const observer = new MutationObserver(() => {
       updateUserInfo();
@@ -88,7 +88,7 @@ function init() {
   } else {
     const bodyObserver = new MutationObserver(() => {
       let toolbarContainer = document.querySelector('#av-toolbar-pip-container');
-      
+
       if(!toolbarContainer) {
         toolbarContainer = document.querySelector('._2owp20p._2owp20r');
       }
@@ -373,3 +373,188 @@ function setupNotificationObserver() {
 }
 
 setupNotificationObserver();
+
+function setupChatChannelObserver() {
+  const processedAnchors = new WeakSet();
+  let isProcessing = false;
+  let debounceTimer = null;
+  let currentListChats = null;
+  
+  function getListChats() {
+    const elements = Array.from(document.querySelectorAll('._1b6zqe9r._1b6zqe9m'))
+      .filter(element => {
+        const children = Array.from(element.children);
+        return children.length > 0 && children.every(child => child.tagName === 'A') && children.length >= 3;
+      });
+    return elements[1] || null;
+  }
+  
+  function getChatName(anchor) {
+    const button = anchor.querySelector('.fix-chat-gather-utilities');
+    let textContent = anchor.textContent || anchor.innerText || '';
+    
+    if (button) {
+      textContent = textContent.replace(button.textContent || '', '').trim();
+    }
+    
+    return textContent.trim().toLowerCase();
+  }
+  
+  function reorderFixedChats(listChats) {
+    if (isProcessing || !listChats) return;
+    
+    isProcessing = true;
+    
+    chrome.storage.local.get(['fixedChats'], (result) => {
+      const fixedChats = result.fixedChats || [];
+      const anchorElements = Array.from(listChats.children).filter(child => child.tagName === 'A');
+      
+      if (anchorElements.length === 0) {
+        isProcessing = false;
+        return;
+      }
+      
+      // Separa fixados e não fixados
+      const fixedAnchors = [];
+      const unfixedAnchors = [];
+      
+      anchorElements.forEach((anchor) => {
+        if (fixedChats.includes(anchor.href)) {
+          fixedAnchors.push(anchor);
+        } else {
+          unfixedAnchors.push(anchor);
+        }
+      });
+      
+      // Ordena alfabeticamente cada grupo
+      fixedAnchors.sort((a, b) => {
+        const nameA = getChatName(a);
+        const nameB = getChatName(b);
+        return nameA.localeCompare(nameB, 'pt-BR', { sensitivity: 'base' });
+      });
+      
+      unfixedAnchors.sort((a, b) => {
+        const nameA = getChatName(a);
+        const nameB = getChatName(b);
+        return nameA.localeCompare(nameB, 'pt-BR', { sensitivity: 'base' });
+      });
+      
+      // Remove todos e reordena: fixados primeiro (alfabeticamente), depois não fixados (alfabeticamente)
+      anchorElements.forEach(anchor => anchor.remove());
+      [...fixedAnchors, ...unfixedAnchors].forEach(anchor => {
+        listChats.appendChild(anchor);
+      });
+      
+      isProcessing = false;
+    });
+  }
+  
+  window.reorderFixedChats = () => {
+    const listChats = getListChats();
+    if (listChats) {
+      reorderFixedChats(listChats);
+    }
+  };
+  
+  function checkForChatChannel() {
+    if (isProcessing) return;
+    
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    
+    debounceTimer = setTimeout(() => {
+      const listChats = getListChats();
+      if (!listChats || listChats === currentListChats && processedAnchors.has(listChats)) {
+        return;
+      }
+      
+      currentListChats = listChats;
+      
+      chrome.storage.local.get(['fixedChats'], (result) => {
+        if (isProcessing) return;
+        
+        const fixedChats = result.fixedChats || [];
+        const anchorElements = Array.from(listChats.children).filter(child => child.tagName === 'A');
+        
+        let hasNewAnchors = false;
+        
+        anchorElements.forEach((anchor) => {
+          const hasButton = anchor.querySelector('.fix-chat-gather-utilities');
+          
+          if (!hasButton && !processedAnchors.has(anchor)) {
+            processedAnchors.add(anchor);
+            hasNewAnchors = true;
+            
+            const isFixed = fixedChats.includes(anchor.href);
+            if (isFixed) {
+              anchor.dataset.fixed = 'true';
+            }
+            
+            const button = createPinButton(anchor);
+            anchor.appendChild(button);
+          }
+        });
+        
+        if (hasNewAnchors) {
+          reorderFixedChats(listChats);
+        }
+      });
+    }, 100);
+  }
+  
+  let chatChannelObserver = null;
+  
+  function setupObserver() {
+    const listChats = getListChats();
+    
+    if (listChats && !chatChannelObserver) {
+      chatChannelObserver = new MutationObserver((mutations) => {
+        const isOurMutation = mutations.some(mutation => {
+          return Array.from(mutation.addedNodes).some(node => 
+            node.nodeType === Node.ELEMENT_NODE && 
+            node.querySelector && 
+            node.querySelector('.fix-chat-gather-utilities')
+          );
+        });
+        
+        if (!isOurMutation) {
+          checkForChatChannel();
+        }
+      });
+      
+      chatChannelObserver.observe(listChats, {
+        childList: true,
+        subtree: false
+      });
+    }
+  }
+  
+  const initialObserver = new MutationObserver(() => {
+    setupObserver();
+    checkForChatChannel();
+  });
+
+  if (document.body) {
+    checkForChatChannel();
+    setupObserver();
+    initialObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  } else {
+    const checkBody = setInterval(() => {
+      if (document.body) {
+        clearInterval(checkBody);
+        checkForChatChannel();
+        setupObserver();
+        initialObserver.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      }
+    }, 100);
+  }
+}
+
+setupChatChannelObserver();
