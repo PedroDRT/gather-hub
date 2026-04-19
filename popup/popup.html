@@ -79,6 +79,10 @@
                         <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#232323" d="M533.6 96.5C523.3 88.1 508.2 89.7 499.8 100C491.4 110.3 493 125.4 503.3 133.8C557.5 177.8 592 244.8 592 320C592 395.2 557.5 462.2 503.3 506.3C493 514.7 491.5 529.8 499.8 540.1C508.1 550.4 523.3 551.9 533.6 543.6C598.5 490.7 640 410.2 640 320C640 229.8 598.5 149.2 533.6 96.5zM473.1 171C462.8 162.6 447.7 164.2 439.3 174.5C430.9 184.8 432.5 199.9 442.8 208.3C475.3 234.7 496 274.9 496 320C496 365.1 475.3 405.3 442.8 431.8C432.5 440.2 431 455.3 439.3 465.6C447.6 475.9 462.8 477.4 473.1 469.1C516.3 433.9 544 380.2 544 320.1C544 260 516.3 206.3 473.1 171.1zM412.6 245.5C402.3 237.1 387.2 238.7 378.8 249C370.4 259.3 372 274.4 382.3 282.8C393.1 291.6 400 305 400 320C400 335 393.1 348.4 382.3 357.3C372 365.7 370.5 380.8 378.8 391.1C387.1 401.4 402.3 402.9 412.6 394.6C434.1 376.9 448 350.1 448 320C448 289.9 434.1 263.1 412.6 245.5zM80 416L128 416L262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416z"/></svg>
                         <span data-i18n-text="navAudio">Audio</span>
                     </button>
+                    <button class="segment-button" data-value="history" data-i18n-aria="navHistory">
+                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#232323" d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64zM320 144C328.8 144 336 151.2 336 160L336 312L424.9 362.7C432.2 367.6 434.2 377.6 429.3 384.9C424.4 392.2 414.5 394.2 407.1 389.3L311.1 325.3C306.7 322.3 304 317.3 304 312L304 160C304 151.2 311.2 144 320 144z"/></svg>
+                        <span data-i18n-text="navHistory">Histórico</span>
+                    </button>
                 </div>
             </div>
 
@@ -226,6 +230,21 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="content-body-history" style="display: none;">
+                    <div class="history-header">
+                        <span class="history-title" data-i18n-text="historyTitle">Histórico de notificações</span>
+                        <button class="history-clear-btn" id="historyClearBtn" data-i18n-aria="historyClear" aria-label="Limpar histórico">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                <path d="M232.7 69.9L224 96L128 96C110.3 96 96 110.3 96 128C96 145.7 110.3 160 128 160L512 160C529.7 160 544 145.7 544 128C544 110.3 529.7 96 512 96L416 96L407.3 69.9C402.9 56.8 390.7 48 376.9 48L263.1 48C249.3 48 237.1 56.8 232.7 69.9zM512 192L128 192L149.1 528.1C150.7 553.4 171.7 573.1 197 573.1L443 573.1C468.3 573.1 489.3 553.4 490.9 528.1L512 192z"/>
+                            </svg>
+                            <span data-i18n-text="historyClear">Limpar</span>
+                        </button>
+                    </div>
+                    <div class="history-list" id="historyList"></div>
+                    <div class="history-empty" id="historyEmpty" data-i18n-text="historyEmpty">
+                        Nenhuma notificação ainda
                     </div>
                 </div>
                 <div class="content-body-profile" style="display: none;">

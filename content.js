@@ -121,10 +121,81 @@
   // Send a detection event to the background, with dedup per message id.
   function dispatchNotification(type, payload) {
     chrome.runtime
-      .sendMessage({ action: 'notificationDetected', type, ...payload })
+      .sendMessage({
+        action: 'notificationDetected',
+        type,
+        spaceUrl: window.location.href,
+        ...payload,
+      })
       .catch((error) => {
         logger.error(`Failed to dispatch ${type} notification:`, error);
       });
+  }
+
+  // Walk up to 6 ancestors from the matching node looking for an avatar image.
+  function findAvatarNear(node) {
+    if (!node) return null;
+    let el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    let depth = 0;
+    while (el && depth < 6) {
+      const img = el.querySelector?.('img[src]');
+      if (img && img.src && /^https?:/i.test(img.src)) return img.src;
+      el = el.parentElement;
+      depth += 1;
+    }
+    return null;
+  }
+
+  // Phrases injected by the toast itself - we want to strip them so the body
+  // contains only the actual chat message typed by the user.
+  const CHAT_ACTION_PHRASES = [
+    'enviou uma mensagem',
+    'sent a message',
+    'envió un mensaje',
+  ];
+
+  // Common toast action buttons that bleed into textContent when DOM siblings
+  // are concatenated (e.g. "View", "Dismiss", "Visualizar", "Ignorar").
+  // No word boundaries on PT/ES terms because Gather glues them together
+  // ("VisualizarIgnorar") and \b would fail at the camelCase seam.
+  const TOAST_BUTTON_PATTERNS = [
+    /visualizar/gi,
+    /ignorar/gi,
+    /responder/gi,
+    /descartar/gi,
+    /\bview\b/gi,
+    /\bdismiss\b/gi,
+    /\breply\b/gi,
+  ];
+
+  // Extract the original chat message body. The raw text usually looks like
+  //   "Pedro enviou uma mensagemOi, tudo bem?VisualizarIgnorar"
+  // because Gather's toast joins multiple DOM elements without separators.
+  function extractMessageBody(text, userName) {
+    if (!text) return null;
+    let cleaned = text.trim();
+
+    if (userName) {
+      const name = userName.trim();
+      const idx = cleaned.indexOf(name);
+      if (idx >= 0) cleaned = cleaned.slice(idx + name.length);
+    }
+
+    for (const phrase of CHAT_ACTION_PHRASES) {
+      cleaned = cleaned.replace(new RegExp(phrase, 'i'), '');
+    }
+
+    for (const pattern of TOAST_BUTTON_PATTERNS) {
+      cleaned = cleaned.replace(pattern, '');
+    }
+
+    cleaned = cleaned
+      .replace(/^[\s:>\-–—]+/, '')
+      .replace(/[\s]+/g, ' ')
+      .trim();
+
+    if (!cleaned || cleaned.length > 280) return null;
+    return cleaned;
   }
 
   // Skip wave notifications when the user is already looking at the chat panel.
@@ -140,35 +211,48 @@
     return result[key] !== false;
   }
 
-  async function handleWave(text, match) {
+  async function handleWave(text, match, node) {
     if (!(await isEnabled('enableWave'))) return;
     if (shouldIgnoreWaveNotification()) return;
     const userName = cleanUserName(match[1]) || null;
     const id = `${userName || 'unknown'}_${text.substring(0, 100)}`;
     if (dedup.wave.has(id)) return;
     dedup.wave.add(id);
-    dispatchNotification('wave', { message: text, userName });
+    dispatchNotification('wave', {
+      message: text,
+      userName,
+      avatar: findAvatarNear(node),
+    });
   }
 
-  async function handleChat(text, match) {
+  async function handleChat(text, match, node) {
     if (!(await isEnabled('enableChat'))) return;
     const userName = cleanUserName(match[1]) || null;
     const id = `${userName || 'unknown'}_${text.substring(0, 100)}`;
     if (dedup.chat.has(id)) return;
     dedup.chat.add(id);
-    dispatchNotification('chat', { message: text, userName });
+    dispatchNotification('chat', {
+      message: text,
+      userName,
+      avatar: findAvatarNear(node),
+      messageBody: extractMessageBody(text, userName),
+    });
   }
 
-  async function handleCall(text, match) {
+  async function handleCall(text, match, node) {
     if (!(await isEnabled('enableCall'))) return;
     const userName = cleanUserName(match[1]) || null;
     const id = `${userName || 'unknown'}_${text.substring(0, 100)}`;
     if (dedup.call.has(id)) return;
     dedup.call.add(id);
-    dispatchNotification('call', { message: text, userName });
+    dispatchNotification('call', {
+      message: text,
+      userName,
+      avatar: findAvatarNear(node),
+    });
   }
 
-  async function handleCalendar(text, match) {
+  async function handleCalendar(text, match, node) {
     if (!(await isEnabled('enableCalendar'))) return;
     const result = await chrome.storage.local.get('calendarNotificationTiming');
     const target = result.calendarNotificationTiming ?? 5;
@@ -177,35 +261,40 @@
     const id = `${text.substring(0, 50)}_${minutes}`;
     if (dedup.calendar.has(id)) return;
     dedup.calendar.add(id);
-    dispatchNotification('calendar', { message: text, minutes });
+    dispatchNotification('calendar', {
+      message: text,
+      minutes,
+      avatar: findAvatarNear(node),
+    });
   }
 
-  function checkText(text) {
+  function checkText(text, node) {
     if (!text || text.trim().length === 0) return;
 
     const wave = extractMatch(text, NOTIFICATION_PATTERNS.wave);
-    if (wave) return handleWave(text, wave);
+    if (wave) return handleWave(text, wave, node);
 
     const chat = extractMatch(text, NOTIFICATION_PATTERNS.chat);
-    if (chat) return handleChat(text, chat);
+    if (chat) return handleChat(text, chat, node);
 
     const call = extractMatch(text, NOTIFICATION_PATTERNS.call);
-    if (call) return handleCall(text, call);
+    if (call) return handleCall(text, call, node);
 
     const calendar = extractMatch(text, NOTIFICATION_PATTERNS.calendar);
-    if (calendar) return handleCalendar(text, calendar);
+    if (calendar) return handleCalendar(text, calendar, node);
   }
 
   // Throttle bursts of mutations into a single scan per frame.
-  const pendingTexts = new Set();
+  // Map<text, node> keeps the originating element so we can inspect siblings/avatars later.
+  const pendingTexts = new Map();
   const flushTexts = debounce(() => {
-    for (const text of pendingTexts) checkText(text);
+    for (const [text, node] of pendingTexts) checkText(text, node);
     pendingTexts.clear();
   }, NOTIFICATION_DEBOUNCE_MS);
 
-  function queueText(text) {
+  function queueText(text, node) {
     if (text && text.trim().length > 0) {
-      pendingTexts.add(text);
+      pendingTexts.set(text, node);
       flushTexts();
     }
   }
@@ -216,12 +305,12 @@
         if (mutation.type === 'childList') {
           for (const node of mutation.addedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
-              queueText(node.textContent || '');
+              queueText(node.textContent || '', node);
             }
           }
         } else if (mutation.type === 'characterData') {
           const parent = mutation.target.parentElement;
-          if (parent) queueText(parent.textContent || '');
+          if (parent) queueText(parent.textContent || '', parent);
         }
       }
     });

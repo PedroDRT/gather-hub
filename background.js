@@ -1,7 +1,14 @@
 import './assets/shared/constants.js';
 import './assets/shared/utils.js';
 
-const { DEFAULT_SETTINGS, NOTIFICATION_TYPES, HOST, CONCENTRATION_ALARM } = globalThis.GH;
+const {
+  DEFAULT_SETTINGS,
+  NOTIFICATION_TYPES,
+  HOST,
+  CONCENTRATION_ALARM,
+  NOTIFICATION_HISTORY_KEY,
+  NOTIFICATION_HISTORY_MAX,
+} = globalThis.GH;
 const { logger } = globalThis.GH_UTILS;
 
 // Session-only state - survives until the service worker is unloaded.
@@ -162,24 +169,28 @@ async function stopNotificationSound() {
   }
 }
 
-function buildNotificationMessage(type, { userName, minutes }) {
+function buildNotificationMessage(type, { userName, minutes, messageBody }) {
   const someone = chrome.i18n.getMessage('someone') || 'Someone';
+  const who = userName || someone;
+
   switch (type) {
     case 'wave': {
       const title = chrome.i18n.getMessage('waveNotificationTitle');
       const body = chrome.i18n.getMessage('waveNotificationMessage');
-      return { title, message: `${userName || someone} ${body}` };
+      return { title, message: `${who} ${body}` };
     }
     case 'chat': {
       const title = chrome.i18n.getMessage('chatNotificationTitle');
       const body = chrome.i18n.getMessage('chatNotificationMessage');
-      return { title, message: `${userName || someone} ${body}` };
+      const base = `${who} ${body}`;
+      const message = messageBody ? `${base} - ${messageBody}` : base;
+      return { title, message };
     }
     case 'call': {
       const title = chrome.i18n.getMessage('callNotificationTitle') || 'Call';
       const body =
         chrome.i18n.getMessage('callNotificationMessage') || 'is calling you';
-      return { title, message: `${userName || someone} ${body}` };
+      return { title, message: `${who} ${body}` };
     }
     case 'calendar': {
       const title = chrome.i18n.getMessage('calendarNotificationTitle');
@@ -192,7 +203,41 @@ function buildNotificationMessage(type, { userName, minutes }) {
   }
 }
 
-async function handleNotification({ type, userName, minutes }) {
+async function appendHistoryEntry(entry) {
+  try {
+    const stored = await chrome.storage.local.get(NOTIFICATION_HISTORY_KEY);
+    const list = Array.isArray(stored[NOTIFICATION_HISTORY_KEY])
+      ? stored[NOTIFICATION_HISTORY_KEY]
+      : [];
+    list.unshift(entry);
+    await chrome.storage.local.set({
+      [NOTIFICATION_HISTORY_KEY]: list.slice(0, NOTIFICATION_HISTORY_MAX),
+    });
+  } catch (error) {
+    logger.error('Failed to append notification history:', error);
+  }
+}
+
+// Maps Chrome notificationId -> { type, userName, spaceUrl } for click handling.
+const notificationMetadata = new Map();
+const NOTIFICATION_METADATA_MAX = 50;
+
+function rememberNotification(notificationId, meta) {
+  notificationMetadata.set(notificationId, meta);
+  if (notificationMetadata.size > NOTIFICATION_METADATA_MAX) {
+    const firstKey = notificationMetadata.keys().next().value;
+    notificationMetadata.delete(firstKey);
+  }
+}
+
+async function handleNotification({
+  type,
+  userName,
+  minutes,
+  avatar,
+  spaceUrl,
+  messageBody,
+}) {
   const settings = await chrome.storage.local.get([
     'enableWave',
     'enableChat',
@@ -206,37 +251,84 @@ async function handleNotification({ type, userName, minutes }) {
   const enabledKey = `enable${type.charAt(0).toUpperCase()}${type.slice(1)}`;
   if (settings[enabledKey] === false) return;
 
-  const built = buildNotificationMessage(type, { userName, minutes });
+  const built = buildNotificationMessage(type, { userName, minutes, messageBody });
   if (!built) return;
 
+  const fallbackIcon = chrome.runtime.getURL('assets/icons/icon48.png');
+  const iconUrl = typeof avatar === 'string' && /^https?:/i.test(avatar) ? avatar : fallbackIcon;
+
+  // Single-message format: title is the type (Chat / Wave / ...), message is "<name> <action> - <body>".
+  // No `buttons` field here on purpose - we don't want "View / Ignore" actions.
+  const baseOptions = {
+    type: 'basic',
+    title: built.title,
+    message: built.message,
+    requireInteraction: false,
+  };
+
   try {
-    await chrome.notifications.create({
-      type: 'basic',
-      iconUrl: chrome.runtime.getURL('assets/icons/icon48.png'),
-      title: built.title,
-      message: built.message,
+    const notificationId = await chrome.notifications.create({
+      ...baseOptions,
+      iconUrl,
     });
+    rememberNotification(notificationId, { type, userName, spaceUrl });
   } catch (error) {
     logger.error('Failed to create notification:', error);
+    if (iconUrl !== fallbackIcon) {
+      try {
+        const notificationId = await chrome.notifications.create({
+          ...baseOptions,
+          iconUrl: fallbackIcon,
+        });
+        rememberNotification(notificationId, { type, userName, spaceUrl });
+      } catch (retryError) {
+        logger.error('Notification fallback also failed:', retryError);
+      }
+    }
   }
+
+  await appendHistoryEntry({
+    type,
+    userName: userName || null,
+    minutes: typeof minutes === 'number' ? minutes : null,
+    title: built.title,
+    message: built.message,
+    messageBody: messageBody || null,
+    avatar: typeof avatar === 'string' ? avatar : null,
+    spaceUrl: typeof spaceUrl === 'string' ? spaceUrl : null,
+    createdAt: Date.now(),
+  });
 
   await setHasNotification(true);
   await updateBadge();
   playNotificationSound(type);
 }
 
-chrome.notifications.onClicked.addListener(async (notificationId) => {
+// Bring the user back to Gather without touching their current room.
+// Prefer an existing tab; only create a new one if no Gather tab is open.
+async function focusGatherTab(spaceUrl) {
   try {
     const tabs = await chrome.tabs.query({ url: `*://${HOST}/*` });
-    const gatherTab = tabs[0];
+    const exact = spaceUrl ? tabs.find((t) => t.url === spaceUrl) : null;
+    const tab = exact || tabs[0];
 
-    if (gatherTab) {
-      await chrome.tabs.update(gatherTab.id, { active: true });
-      await chrome.windows.update(gatherTab.windowId, { focused: true });
+    if (tab) {
+      await chrome.tabs.update(tab.id, { active: true });
+      await chrome.windows.update(tab.windowId, { focused: true });
     } else {
-      await chrome.tabs.create({ url: `https://${HOST}/`, active: true });
+      const createUrl = spaceUrl || `https://${HOST}/`;
+      await chrome.tabs.create({ url: createUrl, active: true });
     }
+  } catch (error) {
+    logger.error('Failed to focus Gather tab:', error);
+  }
+}
 
+chrome.notifications.onClicked.addListener(async (notificationId) => {
+  try {
+    const meta = notificationMetadata.get(notificationId);
+    notificationMetadata.delete(notificationId);
+    await focusGatherTab(meta?.spaceUrl);
     chrome.notifications.clear(notificationId);
     await clearNotificationState();
   } catch (error) {
@@ -294,6 +386,19 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     case 'clearNotificationOnClick':
       clearNotificationState()
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ success: false, error: error?.message }));
+      return true;
+
+    case 'clearNotificationHistory':
+      chrome.storage.local
+        .set({ [NOTIFICATION_HISTORY_KEY]: [] })
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ success: false, error: error?.message }));
+      return true;
+
+    case 'openChatForEntry':
+      focusGatherTab(message.entry?.spaceUrl)
         .then(() => sendResponse({ success: true }))
         .catch((error) => sendResponse({ success: false, error: error?.message }));
       return true;

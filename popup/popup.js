@@ -5,6 +5,7 @@
     SUPPORTED_LANGUAGES,
     NOTIFICATION_TYPES,
     CONCENTRATION_DURATIONS,
+    NOTIFICATION_HISTORY_KEY,
   } = globalThis.GH;
   const { logger, safeParseSvg } = globalThis.GH_UTILS;
 
@@ -208,6 +209,7 @@
     const sections = {
       notifications: document.querySelector('.content-body-notifications'),
       audio: document.querySelector('.content-body-audio'),
+      history: document.querySelector('.content-body-history'),
       bind: document.querySelector('.content-body-profile'),
     };
 
@@ -485,6 +487,124 @@
     });
   }
 
+  // Notification history -----------------------------------------------
+  const HISTORY_TYPE_ICONS = {
+    wave: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M256 64C238.3 64 224 78.3 224 96L224 320C224 337.7 238.3 352 256 352C273.7 352 288 337.7 288 320L288 96C288 78.3 273.7 64 256 64zM352 64C334.3 64 320 78.3 320 96L320 320C320 337.7 334.3 352 352 352C369.7 352 384 337.7 384 320L384 96C384 78.3 369.7 64 352 64zM160 192C142.3 192 128 206.3 128 224L128 384C128 490 214 576 320 576C426 576 512 490 512 384L512 224C512 206.3 497.7 192 480 192C462.3 192 448 206.3 448 224L448 320C448 337.7 433.7 352 416 352C398.3 352 384 337.7 384 320L384 96"/></svg>',
+    chat: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M88.1 112C74.7 112 64 122.7 64 136L64 446.4C64 463.6 77.9 477.5 95.1 477.5L189.1 477.5L189.1 549.4C189.1 564.5 207.4 572 218 561.4L302 477.5L544.9 477.5C562.1 477.5 576 463.6 576 446.4L576 136C576 122.7 565.3 112 552 112L88.1 112z"/></svg>',
+    call: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M168.1 96.6C162.5 83.1 147.7 75.7 133.6 79.5L37.6 105.7C24.7 109.2 15.7 121 15.8 134.4C15.8 379.4 214.3 578 459.3 578C472.7 578 484.5 569 488 556.1L514.2 460.1C518 446 510.6 431.2 497.1 425.6L392.4 381.9C380.4 376.9 366.4 380.4 358.2 390.5L314.1 444.4C237.3 408.1 175.3 346.1 139 269.3L192.9 225.2C203 217 206.5 203 201.5 191L168.1 96.6z"/></svg>',
+    calendar: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M192 64C209.7 64 224 78.3 224 96L224 128L416 128L416 96C416 78.3 430.3 64 448 64C465.7 64 480 78.3 480 96L480 128L512 128C547.3 128 576 156.7 576 192L576 240L64 240L64 192C64 156.7 92.7 128 128 128L160 128L160 96C160 78.3 174.3 64 192 64zM64 288L576 288L576 512C576 547.3 547.3 576 512 576L128 576C92.7 576 64 547.3 64 512L64 288z"/></svg>',
+  };
+
+  function formatRelativeTime(timestamp) {
+    const diffSec = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
+    if (diffSec < 5) return t('historyJustNow') || 'agora';
+    if (diffSec < 60) return `${diffSec}s`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m`;
+    const diffH = Math.floor(diffMin / 60);
+    if (diffH < 24) return `${diffH}h`;
+    const diffD = Math.floor(diffH / 24);
+    return `${diffD}d`;
+  }
+
+  function buildHistoryAvatar(entry) {
+    const wrap = document.createElement('div');
+    const type = entry.type || 'wave';
+    wrap.className = `history-item-avatar history-icon-${type}`;
+
+    if (entry.avatar && /^https?:/i.test(entry.avatar)) {
+      const img = document.createElement('img');
+      img.className = 'history-item-avatar-img';
+      img.src = entry.avatar;
+      img.alt = entry.userName || '';
+      img.referrerPolicy = 'no-referrer';
+      img.addEventListener('error', () => {
+        wrap.innerHTML = HISTORY_TYPE_ICONS[type] || HISTORY_TYPE_ICONS.wave;
+      });
+      wrap.appendChild(img);
+
+      const badge = document.createElement('span');
+      badge.className = `history-item-badge history-icon-${type}`;
+      badge.innerHTML = HISTORY_TYPE_ICONS[type] || HISTORY_TYPE_ICONS.wave;
+      wrap.appendChild(badge);
+    } else {
+      wrap.classList.add('history-item-avatar--icon');
+      wrap.innerHTML = HISTORY_TYPE_ICONS[type] || HISTORY_TYPE_ICONS.wave;
+    }
+    return wrap;
+  }
+
+  function renderHistory(list) {
+    const container = document.getElementById('historyList');
+    const empty = document.getElementById('historyEmpty');
+    if (!container || !empty) return;
+
+    container.innerHTML = '';
+    if (!Array.isArray(list) || list.length === 0) {
+      empty.style.display = 'block';
+      container.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    container.style.display = 'block';
+
+    list.forEach((entry) => {
+      if (!entry) return;
+      const item = document.createElement('div');
+      item.className = 'history-item';
+
+      const avatar = buildHistoryAvatar(entry);
+
+      const body = document.createElement('div');
+      body.className = 'history-item-body';
+
+      const title = document.createElement('div');
+      title.className = 'history-item-title';
+      title.textContent = entry.userName || entry.title || t('someone') || '—';
+
+      const message = document.createElement('div');
+      message.className = 'history-item-message';
+      message.textContent = entry.messageBody || entry.message || '';
+
+      body.appendChild(title);
+      if (message.textContent) body.appendChild(message);
+
+      const time = document.createElement('div');
+      time.className = 'history-item-time';
+      time.textContent = formatRelativeTime(entry.createdAt || Date.now());
+
+      item.appendChild(avatar);
+      item.appendChild(body);
+      item.appendChild(time);
+      container.appendChild(item);
+    });
+  }
+
+  async function loadHistory() {
+    const stored = await chrome.storage.local.get(NOTIFICATION_HISTORY_KEY);
+    renderHistory(stored[NOTIFICATION_HISTORY_KEY] || []);
+  }
+
+  function setupHistory() {
+    const clearBtn = document.getElementById('historyClearBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', async () => {
+        try {
+          await chrome.runtime.sendMessage({ action: 'clearNotificationHistory' });
+        } catch (error) {
+          logger.warn('Clear history fallback:', error);
+          await chrome.storage.local.set({ [NOTIFICATION_HISTORY_KEY]: [] });
+        }
+      });
+    }
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes[NOTIFICATION_HISTORY_KEY]) {
+        renderHistory(changes[NOTIFICATION_HISTORY_KEY].newValue || []);
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', async () => {
     const stored = await chrome.storage.local.get(I18N_STORAGE_KEY);
     const initialLang = resolveLanguage(
@@ -519,11 +639,17 @@
     setupVolumeSlider();
     setupSettingsMenu();
     setupTheme();
+    setupHistory();
 
     populateConcentrationDurations();
     setupConcentrationControls();
 
-    await Promise.all([loadUserInfo(), loadSettings(), loadConcentrationState()]);
+    await Promise.all([
+      loadUserInfo(),
+      loadSettings(),
+      loadConcentrationState(),
+      loadHistory(),
+    ]);
     await autoClear();
 
     window.addEventListener('beforeunload', stopCountdown);

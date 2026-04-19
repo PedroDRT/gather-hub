@@ -78,6 +78,9 @@
     DEDUP_MAX_SIZE: 200,
 
     HOST: 'app.v2.gather.town',
+
+    NOTIFICATION_HISTORY_KEY: 'notificationHistory',
+    NOTIFICATION_HISTORY_MAX: 30,
   };
 
   if (typeof globalThis !== 'undefined') globalThis.GH = GH;

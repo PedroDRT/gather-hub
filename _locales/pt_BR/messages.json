@@ -83,6 +83,36 @@
     "message": "Audio",
     "description": "Menu de navegação - Audio"
   },
+
+  "navHistory": {
+    "message": "Histórico",
+    "description": "Menu de navegação - Histórico"
+  },
+
+  "historyTitle": {
+    "message": "Histórico de notificações",
+    "description": "Título da seção de histórico"
+  },
+
+  "historyClear": {
+    "message": "Limpar",
+    "description": "Botão para limpar o histórico"
+  },
+
+  "historyEmpty": {
+    "message": "Nenhuma notificação ainda",
+    "description": "Mensagem quando o histórico está vazio"
+  },
+
+  "historyJustNow": {
+    "message": "agora",
+    "description": "Tempo relativo: há poucos segundos"
+  },
+
+  "historyOpenChatTitle": {
+    "message": "Abrir conversa no Gather",
+    "description": "Tooltip do item de histórico clicável"
+  },
   
   "navBind": {
     "message": "Bind",

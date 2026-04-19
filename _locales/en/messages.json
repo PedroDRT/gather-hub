@@ -83,6 +83,36 @@
     "message": "Audio",
     "description": "Navigation menu - Audio"
   },
+
+  "navHistory": {
+    "message": "History",
+    "description": "Navigation menu - History"
+  },
+
+  "historyTitle": {
+    "message": "Notification history",
+    "description": "Title of the history section"
+  },
+
+  "historyClear": {
+    "message": "Clear",
+    "description": "Button to clear the notification history"
+  },
+
+  "historyEmpty": {
+    "message": "No notifications yet",
+    "description": "Empty state for notification history"
+  },
+
+  "historyJustNow": {
+    "message": "now",
+    "description": "Relative time: a few seconds ago"
+  },
+
+  "historyOpenChatTitle": {
+    "message": "Open chat in Gather",
+    "description": "Tooltip for clickable history item"
+  },
   
   "navBind": {
     "message": "Bind",
