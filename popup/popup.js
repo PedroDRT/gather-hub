@@ -534,13 +534,25 @@
     return wrap;
   }
 
+  // Keep the latest history list so we can re-render when only the filter changes.
+  let historyEntries = [];
+  let historyFilter = 'all';
+
+  function applyHistoryFilter(entries) {
+    if (historyFilter === 'all') return entries;
+    return entries.filter((entry) => entry?.type === historyFilter);
+  }
+
   function renderHistory(list) {
+    if (Array.isArray(list)) historyEntries = list;
     const container = document.getElementById('historyList');
     const empty = document.getElementById('historyEmpty');
     if (!container || !empty) return;
 
+    const filtered = applyHistoryFilter(historyEntries);
+
     container.innerHTML = '';
-    if (!Array.isArray(list) || list.length === 0) {
+    if (filtered.length === 0) {
       empty.style.display = 'block';
       container.style.display = 'none';
       return;
@@ -548,7 +560,7 @@
     empty.style.display = 'none';
     container.style.display = 'block';
 
-    list.forEach((entry) => {
+    filtered.forEach((entry) => {
       if (!entry) return;
       const item = document.createElement('div');
       item.className = 'history-item';
@@ -585,6 +597,25 @@
     renderHistory(stored[NOTIFICATION_HISTORY_KEY] || []);
   }
 
+  function setupHistoryFilters() {
+    const buttons = document.querySelectorAll('.history-filter');
+    if (!buttons.length) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const value = btn.getAttribute('data-filter') || 'all';
+        if (value === historyFilter) return;
+        historyFilter = value;
+        buttons.forEach((b) => {
+          const isActive = b === btn;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        renderHistory();
+      });
+    });
+  }
+
   function setupHistory() {
     const clearBtn = document.getElementById('historyClearBtn');
     if (clearBtn) {
@@ -597,6 +628,8 @@
         }
       });
     }
+
+    setupHistoryFilters();
 
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === 'local' && changes[NOTIFICATION_HISTORY_KEY]) {
@@ -651,6 +684,16 @@
       loadHistory(),
     ]);
     await autoClear();
+
+    // Reset the unread badge counter as soon as the popup is open.
+    try {
+      await chrome.runtime.sendMessage({ action: 'popupOpened' });
+    } catch (error) {
+      const msg = error?.message ?? '';
+      if (!msg.includes('Receiving end does not exist')) {
+        logger.warn('popupOpened notify failed:', error);
+      }
+    }
 
     window.addEventListener('beforeunload', stopCountdown);
   });

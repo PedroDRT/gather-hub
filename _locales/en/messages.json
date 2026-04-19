@@ -113,6 +113,31 @@
     "message": "Open chat in Gather",
     "description": "Tooltip for clickable history item"
   },
+
+  "historyFilterAll": {
+    "message": "All",
+    "description": "History filter - all notifications"
+  },
+
+  "historyFilterWave": {
+    "message": "Wave",
+    "description": "History filter - waves only"
+  },
+
+  "historyFilterChat": {
+    "message": "Chat",
+    "description": "History filter - chats only"
+  },
+
+  "historyFilterCall": {
+    "message": "Call",
+    "description": "History filter - calls only"
+  },
+
+  "historyFilterCalendar": {
+    "message": "Calendar",
+    "description": "History filter - calendar events only"
+  },
   
   "navBind": {
     "message": "Bind",

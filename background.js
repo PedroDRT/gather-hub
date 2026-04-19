@@ -8,6 +8,8 @@ const {
   CONCENTRATION_ALARM,
   NOTIFICATION_HISTORY_KEY,
   NOTIFICATION_HISTORY_MAX,
+  UNREAD_COUNT_KEY,
+  UNREAD_COUNT_MAX_DISPLAY,
 } = globalThis.GH;
 const { logger } = globalThis.GH_UTILS;
 
@@ -63,16 +65,38 @@ async function setHasNotification(value) {
   await chrome.storage.local.set({ hasNotification: Boolean(value) });
 }
 
+async function getUnreadCount() {
+  const { [UNREAD_COUNT_KEY]: value } = await chrome.storage.local.get(UNREAD_COUNT_KEY);
+  const num = Number(value);
+  return Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
+}
+
+async function setUnreadCount(value) {
+  const num = Math.max(0, Math.floor(Number(value) || 0));
+  await chrome.storage.local.set({ [UNREAD_COUNT_KEY]: num });
+}
+
+async function incrementUnreadCount() {
+  const current = await getUnreadCount();
+  await setUnreadCount(current + 1);
+}
+
+function formatBadgeCount(count) {
+  if (count <= 0) return '';
+  if (count > UNREAD_COUNT_MAX_DISPLAY) return `${UNREAD_COUNT_MAX_DISPLAY}+`;
+  return String(count);
+}
+
 async function updateBadge() {
   const { isConcentrationMode } = await chrome.storage.local.get('isConcentrationMode');
-  const hasNotification = await getHasNotification();
+  const unread = await getUnreadCount();
 
   if (isConcentrationMode) {
     chrome.action.setBadgeText({ text: 'C' });
     chrome.action.setBadgeBackgroundColor({ color: '#FFA500' });
-  } else if (hasNotification) {
-    chrome.action.setBadgeText({ text: '!' });
-    chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
+  } else if (unread > 0) {
+    chrome.action.setBadgeText({ text: formatBadgeCount(unread) });
+    chrome.action.setBadgeBackgroundColor({ color: '#EF4444' });
   } else {
     chrome.action.setBadgeText({ text: '' });
   }
@@ -80,6 +104,7 @@ async function updateBadge() {
 
 async function clearNotificationState() {
   await setHasNotification(false);
+  await setUnreadCount(0);
   await updateBadge();
   await stopNotificationSound();
 }
@@ -300,6 +325,7 @@ async function handleNotification({
   });
 
   await setHasNotification(true);
+  await incrementUnreadCount();
   await updateBadge();
   playNotificationSound(type);
 }
@@ -410,6 +436,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     case 'updateBadge':
       updateBadge()
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ success: false, error: error?.message }));
+      return true;
+
+    case 'popupOpened':
+      // Clear the unread badge as soon as the user opens the popup.
+      setUnreadCount(0)
+        .then(() => updateBadge())
         .then(() => sendResponse({ success: true }))
         .catch((error) => sendResponse({ success: false, error: error?.message }));
       return true;

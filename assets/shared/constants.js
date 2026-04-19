@@ -81,6 +81,9 @@
 
     NOTIFICATION_HISTORY_KEY: 'notificationHistory',
     NOTIFICATION_HISTORY_MAX: 30,
+
+    UNREAD_COUNT_KEY: 'unreadCount',
+    UNREAD_COUNT_MAX_DISPLAY: 99,
   };
 
   if (typeof globalThis !== 'undefined') globalThis.GH = GH;
