@@ -128,6 +128,16 @@
     "message": "Select the audio for calendar notifications",
     "description": "Audio description for calendar notifications"
   },
+
+  "audioVolumeLabel": {
+    "message": "Notification <strong>Volume</strong>",
+    "description": "Label for notifications volume"
+  },
+
+  "audioVolumeDescription": {
+    "message": "Adjust the volume of notification sounds",
+    "description": "Description for notifications volume"
+  },
   
   "testAudio": {
     "message": "Test audio",
@@ -188,7 +198,77 @@
     "message": "Event in {minutes} minutes",
     "description": "Calendar notification message"
   },
-  
+
+  "callNotificationTitle": {
+    "message": "Call",
+    "description": "Call notification title"
+  },
+
+  "callNotificationMessage": {
+    "message": "started a call",
+    "description": "Call notification message"
+  },
+
+  "menuLanguage": {
+    "message": "Language",
+    "description": "Settings menu item - Language"
+  },
+
+  "menuTheme": {
+    "message": "Theme",
+    "description": "Settings menu item - Theme"
+  },
+
+  "menuConcentration": {
+    "message": "Focus mode",
+    "description": "Settings menu item - Concentration mode"
+  },
+
+  "concentrationDurationLabel": {
+    "message": "Duration",
+    "description": "Label for concentration mode duration"
+  },
+
+  "concentrationRemainingLabel": {
+    "message": "Remaining",
+    "description": "Label for concentration mode remaining time"
+  },
+
+  "concentrationDurationIndefinite": {
+    "message": "Indefinite",
+    "description": "Duration option: indefinite"
+  },
+
+  "concentrationDuration15": {
+    "message": "15 minutes",
+    "description": "Duration option: 15 minutes"
+  },
+
+  "concentrationDuration30": {
+    "message": "30 minutes",
+    "description": "Duration option: 30 minutes"
+  },
+
+  "concentrationDuration60": {
+    "message": "1 hour",
+    "description": "Duration option: 1 hour"
+  },
+
+  "concentrationDuration120": {
+    "message": "2 hours",
+    "description": "Duration option: 2 hours"
+  },
+
+  "concentrationIndefiniteShort": {
+    "message": "∞",
+    "description": "Short indicator for indefinite duration"
+  },
+
+  "settingsAria": {
+    "message": "Settings",
+    "description": "Aria-label for settings button"
+  },
+
   "someone": {
     "message": "Someone",
     "description": "Word someone"

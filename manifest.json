@@ -28,7 +28,8 @@
     "tabs",
     "activeTab",
     "storage",
-    "offscreen"
+    "offscreen",
+    "alarms"
   ],
 
   "host_permissions": [
@@ -41,9 +42,22 @@
         "*://app.v2.gather.town/*"
       ],
       "js": [
+        "assets/shared/constants.js",
+        "assets/shared/utils.js",
         "content.js"
       ],
       "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "_locales/*/messages.json"
+      ],
+      "matches": [
+        "*://app.v2.gather.town/*"
+      ]
     }
   ],
 

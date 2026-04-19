@@ -1,0 +1,22 @@
+{
+  "name": "gather-hub",
+  "version": "1.0.0",
+  "description": "Central de notificações inteligente para Gather.town",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write \"**/*.{js,html,css,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,html,css,json,md}\"",
+    "zip": "node scripts/zip.js",
+    "bump-version": "node scripts/bump-version.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

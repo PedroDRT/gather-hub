@@ -128,6 +128,16 @@
     "message": "Selecciona el audio para notificaciones de calendario",
     "description": "Descripción de audio para notificaciones de calendario"
   },
+
+  "audioVolumeLabel": {
+    "message": "<strong>Volumen</strong> de las notificaciones",
+    "description": "Etiqueta del volumen de notificaciones"
+  },
+
+  "audioVolumeDescription": {
+    "message": "Ajusta el volumen de los sonidos de notificación",
+    "description": "Descripción del volumen de notificaciones"
+  },
   
   "testAudio": {
     "message": "Probar audio",
@@ -188,7 +198,77 @@
     "message": "Evento en {minutes} minutos",
     "description": "Mensaje de la notificación de calendario"
   },
-  
+
+  "callNotificationTitle": {
+    "message": "Llamada",
+    "description": "Título de la notificación de llamada"
+  },
+
+  "callNotificationMessage": {
+    "message": "inició una llamada",
+    "description": "Mensaje de la notificación de llamada"
+  },
+
+  "menuLanguage": {
+    "message": "Idioma",
+    "description": "Ítem del menú de configuración - Idioma"
+  },
+
+  "menuTheme": {
+    "message": "Tema",
+    "description": "Ítem del menú de configuración - Tema"
+  },
+
+  "menuConcentration": {
+    "message": "Concentración",
+    "description": "Ítem del menú de configuración - Modo Concentración"
+  },
+
+  "concentrationDurationLabel": {
+    "message": "Duración",
+    "description": "Etiqueta de la duración del modo concentración"
+  },
+
+  "concentrationRemainingLabel": {
+    "message": "Restante",
+    "description": "Etiqueta del tiempo restante del modo concentración"
+  },
+
+  "concentrationDurationIndefinite": {
+    "message": "Indefinido",
+    "description": "Opción de duración: indefinido"
+  },
+
+  "concentrationDuration15": {
+    "message": "15 minutos",
+    "description": "Opción de duración: 15 minutos"
+  },
+
+  "concentrationDuration30": {
+    "message": "30 minutos",
+    "description": "Opción de duración: 30 minutos"
+  },
+
+  "concentrationDuration60": {
+    "message": "1 hora",
+    "description": "Opción de duración: 1 hora"
+  },
+
+  "concentrationDuration120": {
+    "message": "2 horas",
+    "description": "Opción de duración: 2 horas"
+  },
+
+  "concentrationIndefiniteShort": {
+    "message": "∞",
+    "description": "Indicador corto de duración indefinida"
+  },
+
+  "settingsAria": {
+    "message": "Configuración",
+    "description": "Aria-label del botón de configuración"
+  },
+
   "someone": {
     "message": "Alguien",
     "description": "Palabra alguien"

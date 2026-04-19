@@ -14,28 +14,52 @@
                 <span id="user-name">Gather Hub</span>
             </div>
             <div class="header-settings">
-                <button class="settings-icon-btn" id="settingsBtn" aria-label="Configurações">
+                <button class="settings-icon-btn" id="settingsBtn" data-i18n-aria="settingsAria" aria-label="Configurações">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                         <path d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
                     </svg>
                 </button>
                 <div class="settings-menu" id="settingsMenu" style="display: none;">
-                    <div class="settings-menu-item" id="languageItem">
+                    <div class="settings-menu-item settings-menu-item--inline" id="languageItem">
                         <svg class="settings-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z"/>
                         </svg>
-                        <span>Idioma</span>
-                        <div class="language-submenu" id="languageSubmenu" style="display: none;">
-                            <div class="language-option" data-lang="pt_BR">Português</div>
-                            <div class="language-option" data-lang="en">Inglês</div>
-                            <div class="language-option" data-lang="es">Espanhol</div>
-                        </div>
+                        <span data-i18n-text="menuLanguage">Idioma</span>
+                        <select id="languageSelect" class="language-select" data-i18n-aria="menuLanguage" aria-label="Idioma">
+                            <option value="pt_BR">Português</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    <div class="settings-menu-item settings-menu-item--inline" id="concentrationItem">
+                        <svg class="settings-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 64C214 64 128 150 128 256C128 322.7 161.9 381.4 213.4 415.9C242.6 435.5 272 455.5 272 491L272 528C272 554.5 293.5 576 320 576C346.5 576 368 554.5 368 528L368 491C368 455.4 397.4 435.5 426.6 415.9C478.1 381.4 512 322.7 512 256C512 150 426 64 320 64zM320 144C381.9 144 432 194.1 432 256C432 273.7 446.3 288 464 288C481.7 288 496 273.7 496 256C496 161.7 414.3 80 320 80C302.3 80 288 94.3 288 112C288 129.7 302.3 144 320 144z"/>
+                        </svg>
+                        <span data-i18n-text="menuConcentration">Concentração</span>
+                        <label class="toggle-switch theme-toggle">
+                            <input type="checkbox" id="concentrationToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-menu-item settings-menu-item--inline settings-menu-item--sub" id="concentrationDurationItem">
+                        <svg class="settings-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320zM320 144C311.2 144 304 151.2 304 160L304 312C304 317.3 306.7 322.3 311.1 325.3L407.1 389.3C414.5 394.2 424.4 392.2 429.3 384.9C434.2 377.6 432.2 367.6 424.9 362.7L336 303.4L336 160C336 151.2 328.8 144 320 144z"/>
+                        </svg>
+                        <span class="settings-menu-sublabel" data-i18n-text="concentrationDurationLabel">Duração</span>
+                        <select id="concentrationDurationSelect" class="language-select" data-i18n-aria="concentrationDurationLabel" aria-label="Duração"></select>
+                    </div>
+                    <div class="settings-menu-item settings-menu-item--inline settings-menu-item--sub" id="concentrationCountdownItem" style="display: none;">
+                        <svg class="settings-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M224 64C206.3 64 192 78.3 192 96C192 113.7 206.3 128 224 128L224 178.7C224 218.6 237.9 257.3 263.4 287.9L319.6 320L263.4 352.1C237.9 382.7 224 421.4 224 461.3L224 512C206.3 512 192 526.3 192 544C192 561.7 206.3 576 224 576L416 576C433.7 576 448 561.7 448 544C448 526.3 433.7 512 416 512L416 461.3C416 421.4 402.1 382.7 376.6 352.1L320.4 320L376.6 287.9C402.1 257.3 416 218.6 416 178.7L416 128C433.7 128 448 113.7 448 96C448 78.3 433.7 64 416 64L224 64z"/>
+                        </svg>
+                        <span class="settings-menu-sublabel" data-i18n-text="concentrationRemainingLabel">Restante</span>
+                        <span class="settings-menu-value" id="concentrationCountdown">--:--</span>
                     </div>
                     <div class="settings-menu-item" id="themeItem">
                         <svg class="settings-menu-icon theme-icon" id="themeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M210.2 53.9C217.6 50.8 226 51.7 232.7 56.1L320.5 114.3L408.3 56.1C415 51.7 423.4 50.9 430.8 53.9C438.2 56.9 443.4 63.5 445 71.3L465.9 174.5L569.1 195.4C576.9 197 583.5 202.4 586.5 209.7C589.5 217 588.7 225.5 584.3 232.2L526.1 320L584.3 407.8C588.7 414.5 589.5 422.9 586.5 430.3C583.5 437.7 576.9 443.1 569.1 444.6L465.8 465.4L445 568.7C443.4 576.5 438 583.1 430.7 586.1C423.4 589.1 414.9 588.3 408.2 583.9L320.4 525.7L232.6 583.9C225.9 588.3 217.5 589.1 210.1 586.1C202.7 583.1 197.3 576.5 195.8 568.7L175 465.4L71.7 444.5C63.9 442.9 57.3 437.5 54.3 430.2C51.3 422.9 52.1 414.4 56.5 407.7L114.7 320L56.5 232.2C52.1 225.5 51.3 217.1 54.3 209.7C57.3 202.3 63.9 196.9 71.7 195.4L175 174.6L195.9 71.3C197.5 63.5 202.9 56.9 210.2 53.9zM239.6 320C239.6 275.6 275.6 239.6 320 239.6C364.4 239.6 400.4 275.6 400.4 320C400.4 364.4 364.4 400.4 320 400.4C275.6 400.4 239.6 364.4 239.6 320zM448.4 320C448.4 249.1 390.9 191.6 320 191.6C249.1 191.6 191.6 249.1 191.6 320C191.6 390.9 249.1 448.4 320 448.4C390.9 448.4 448.4 390.9 448.4 320z"/>
                         </svg>
-                        <span>Tema</span>
+                        <span data-i18n-text="menuTheme">Tema</span>
                         <label class="toggle-switch theme-toggle">
                             <input type="checkbox" id="themeToggle">
                             <span class="toggle-slider"></span>
@@ -47,13 +71,13 @@
         <div class="content">
             <div class="content-header">
                 <div class="segmented-control">
-                    <button class="segment-button active" data-value="notifications" aria-label="Notifications">
-                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M320 64C302.3 64 288 78.3 288 96L288 99.2C215 114 160 178.6 160 256L160 277.7C160 325.8 143.6 372.5 113.6 410.1L103.8 422.3C98.7 428.6 96 436.4 96 444.5C96 464.1 111.9 480 131.5 480L508.4 480C528 480 543.9 464.1 543.9 444.5C543.9 436.4 541.2 428.6 536.1 422.3L526.3 410.1C496.4 372.5 480 325.8 480 277.7L480 256C480 178.6 425 114 352 99.2L352 96C352 78.3 337.7 64 320 64zM258 528C265.1 555.6 290.2 576 320 576C349.8 576 374.9 555.6 382 528L258 528z"/></svg>
-                        <span>Notificações</span>
+                    <button class="segment-button active" data-value="notifications" data-i18n-aria="navNotifications">
+                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#232323" d="M320 64C302.3 64 288 78.3 288 96L288 99.2C215 114 160 178.6 160 256L160 277.7C160 325.8 143.6 372.5 113.6 410.1L103.8 422.3C98.7 428.6 96 436.4 96 444.5C96 464.1 111.9 480 131.5 480L508.4 480C528 480 543.9 464.1 543.9 444.5C543.9 436.4 541.2 428.6 536.1 422.3L526.3 410.1C496.4 372.5 480 325.8 480 277.7L480 256C480 178.6 425 114 352 99.2L352 96C352 78.3 337.7 64 320 64zM258 528C265.1 555.6 290.2 576 320 576C349.8 576 374.9 555.6 382 528L258 528z"/></svg>
+                        <span data-i18n-text="navNotifications">Notificações</span>
                     </button>
-                    <button class="segment-button" data-value="audio" aria-label="Audio">
-                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#232323" d="M533.6 96.5C523.3 88.1 508.2 89.7 499.8 100C491.4 110.3 493 125.4 503.3 133.8C557.5 177.8 592 244.8 592 320C592 395.2 557.5 462.2 503.3 506.3C493 514.7 491.5 529.8 499.8 540.1C508.1 550.4 523.3 551.9 533.6 543.6C598.5 490.7 640 410.2 640 320C640 229.8 598.5 149.2 533.6 96.5zM473.1 171C462.8 162.6 447.7 164.2 439.3 174.5C430.9 184.8 432.5 199.9 442.8 208.3C475.3 234.7 496 274.9 496 320C496 365.1 475.3 405.3 442.8 431.8C432.5 440.2 431 455.3 439.3 465.6C447.6 475.9 462.8 477.4 473.1 469.1C516.3 433.9 544 380.2 544 320.1C544 260 516.3 206.3 473.1 171.1zM412.6 245.5C402.3 237.1 387.2 238.7 378.8 249C370.4 259.3 372 274.4 382.3 282.8C393.1 291.6 400 305 400 320C400 335 393.1 348.4 382.3 357.3C372 365.7 370.5 380.8 378.8 391.1C387.1 401.4 402.3 402.9 412.6 394.6C434.1 376.9 448 350.1 448 320C448 289.9 434.1 263.1 412.6 245.5zM80 416L128 416L262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416z"/></svg>
-                        <span>Audio</span>
+                    <button class="segment-button" data-value="audio" data-i18n-aria="navAudio">
+                        <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#232323" d="M533.6 96.5C523.3 88.1 508.2 89.7 499.8 100C491.4 110.3 493 125.4 503.3 133.8C557.5 177.8 592 244.8 592 320C592 395.2 557.5 462.2 503.3 506.3C493 514.7 491.5 529.8 499.8 540.1C508.1 550.4 523.3 551.9 533.6 543.6C598.5 490.7 640 410.2 640 320C640 229.8 598.5 149.2 533.6 96.5zM473.1 171C462.8 162.6 447.7 164.2 439.3 174.5C430.9 184.8 432.5 199.9 442.8 208.3C475.3 234.7 496 274.9 496 320C496 365.1 475.3 405.3 442.8 431.8C432.5 440.2 431 455.3 439.3 465.6C447.6 475.9 462.8 477.4 473.1 469.1C516.3 433.9 544 380.2 544 320.1C544 260 516.3 206.3 473.1 171.1zM412.6 245.5C402.3 237.1 387.2 238.7 378.8 249C370.4 259.3 372 274.4 382.3 282.8C393.1 291.6 400 305 400 320C400 335 393.1 348.4 382.3 357.3C372 365.7 370.5 380.8 378.8 391.1C387.1 401.4 402.3 402.9 412.6 394.6C434.1 376.9 448 350.1 448 320C448 289.9 434.1 263.1 412.6 245.5zM80 416L128 416L262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416z"/></svg>
+                        <span data-i18n-text="navAudio">Audio</span>
                     </button>
                 </div>
             </div>
@@ -63,131 +87,139 @@
                     <div class="notifications-section">
                         <div class="notifications-item">
                             <div class="notifications-info">
-                                <label class="setting-label">Notificações de <strong>Acenar</strong></label>
-                                <span class="setting-description">Receba notificações quando alguém acenar para você no <strong>Gather</strong></span>
+                                <label class="setting-label" data-i18n="notificationsWaveLabel"></label>
+                                <span class="setting-description" data-i18n="notificationsWaveDescription"></span>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="enableWave" checked>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="notifications-item">
                             <div class="notifications-info">
-                                <label class="setting-label">Notificações de <strong>Chat</strong></label>
-                                <span class="setting-description">Receba notificações quando receber mensagens no chat do <strong>Gather</strong></span>
+                                <label class="setting-label" data-i18n="notificationsChatLabel"></label>
+                                <span class="setting-description" data-i18n="notificationsChatDescription"></span>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="enableChat" checked>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="notifications-item">
                             <div class="notifications-info">
-                                <label class="setting-label">Notificações de <strong>Chamada</strong></label>
-                                <span class="setting-description">Receba notificações quando alguém iniciar uma chamada no <strong>Gather</strong></span>
+                                <label class="setting-label" data-i18n="notificationsCallLabel"></label>
+                                <span class="setting-description" data-i18n="notificationsCallDescription"></span>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="enableCall" checked>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="notifications-item">
                             <div class="notifications-info">
-                                <label class="setting-label">Notificações de <strong>Calendário Google</strong></label>
-                                <span class="setting-description">Receba notificações de eventos do <strong>Google Calendar</strong> antes do início</span>
+                                <label class="setting-label" data-i18n="notificationsCalendarLabel"></label>
+                                <span class="setting-description" data-i18n="notificationsCalendarDescription"></span>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="enableCalendar" checked>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="notifications-item calendar-timing" id="calendarTimingContainer" style="display: none;">
                             <div class="notifications-info">
-                                <label class="notifications-label">Tempo de Antecedência</label>
-                                <span class="notifications-description">Quanto tempo antes do evento você deseja ser notificado</span>
+                                <label class="notifications-label" data-i18n-text="calendarTimingLabel"></label>
+                                <span class="notifications-description" data-i18n-text="calendarTimingDescription"></span>
                             </div>
                             <select id="calendarNotificationTiming" class="notifications-select">
-                                <option value="0">0 minutos</option>
-                                <option value="1">1 minuto</option>
-                                <option value="2">2 minutos</option>
-                                <option value="3">3 minutos</option>
-                                <option value="4">4 minutos</option>
-                                <option value="5" selected>5 minutos</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5" selected>5</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="content-body-audio" style="display: none;">
                     <div class="settings-section">
+                        <div class="audio-setting-item volume-item">
+                            <div class="setting-info">
+                                <label class="setting-label" for="notificationVolumeSlider" data-i18n="audioVolumeLabel"></label>
+                                <span class="setting-description" data-i18n-text="audioVolumeDescription"></span>
+                            </div>
+                            <div class="audio-controls volume-controls">
+                                <input
+                                    type="range"
+                                    id="notificationVolumeSlider"
+                                    class="volume-slider"
+                                    min="0"
+                                    max="100"
+                                    step="1"
+                                    value="70"
+                                    data-i18n-aria="audioVolumeLabel"
+                                    aria-label="Volume"
+                                >
+                                <span class="volume-value" id="notificationVolumeValue">70%</span>
+                            </div>
+                        </div>
                         <div class="audio-setting-item">
                             <div class="setting-info">
-                                <label class="setting-label">Notificações de <strong>Acenar</strong></label>
-                                <span class="setting-description">Selecione o áudio para notificações de acenar</span>
+                                <label class="setting-label" data-i18n="audioWaveLabel"></label>
+                                <span class="setting-description" data-i18n-text="audioWaveDescription"></span>
                             </div>
                             <div class="audio-controls">
-                                <select id="waveAudioSelect" class="audio-select">
-                                    <option value="gather-notificator-audio.mp3">Áudio Padrão</option>
-                                    <option value="gather-notificator-audio2.wav">Áudio Alternativo</option>
-                                </select>
-                                <button class="audio-play-btn" data-audio="wave" aria-label="Testar áudio">
+                                <select id="waveAudioSelect" class="audio-select"></select>
+                                <button class="audio-play-btn" data-audio="wave" data-i18n-aria="testAudio">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.5 2.5L12.5 8L3.5 13.5V2.5Z" fill="currentColor"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="audio-setting-item">
                             <div class="setting-info">
-                                <label class="setting-label">Notificações de <strong>Chat</strong></label>
-                                <span class="setting-description">Selecione o áudio para notificações de chat</span>
+                                <label class="setting-label" data-i18n="audioChatLabel"></label>
+                                <span class="setting-description" data-i18n-text="audioChatDescription"></span>
                             </div>
                             <div class="audio-controls">
-                                <select id="chatAudioSelect" class="audio-select">
-                                    <option value="gather-notificator-audio.mp3">Áudio Padrão</option>
-                                    <option value="gather-notificator-audio2.wav">Áudio Alternativo</option>
-                                </select>
-                                <button class="audio-play-btn" data-audio="chat" aria-label="Testar áudio">
+                                <select id="chatAudioSelect" class="audio-select"></select>
+                                <button class="audio-play-btn" data-audio="chat" data-i18n-aria="testAudio">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.5 2.5L12.5 8L3.5 13.5V2.5Z" fill="currentColor"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="audio-setting-item">
                             <div class="setting-info">
-                                <label class="setting-label">Notificações de <strong>Chamada</strong></label>
-                                <span class="setting-description">Selecione o áudio para notificações de chamada</span>
+                                <label class="setting-label" data-i18n="audioCallLabel"></label>
+                                <span class="setting-description" data-i18n-text="audioCallDescription"></span>
                             </div>
                             <div class="audio-controls">
-                                <select id="callAudioSelect" class="audio-select">
-                                    <option value="gather-notificator-audio.mp3">Áudio Padrão</option>
-                                    <option value="gather-notificator-audio2.wav">Áudio Alternativo</option>
-                                </select>
-                                <button class="audio-play-btn" data-audio="call" aria-label="Testar áudio">
+                                <select id="callAudioSelect" class="audio-select"></select>
+                                <button class="audio-play-btn" data-audio="call" data-i18n-aria="testAudio">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.5 2.5L12.5 8L3.5 13.5V2.5Z" fill="currentColor"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="audio-setting-item">
                             <div class="setting-info">
-                                <label class="setting-label">Notificações de <strong>Calendário Google</strong></label>
-                                <span class="setting-description">Selecione o áudio para notificações de calendário</span>
+                                <label class="setting-label" data-i18n="audioCalendarLabel"></label>
+                                <span class="setting-description" data-i18n-text="audioCalendarDescription"></span>
                             </div>
                             <div class="audio-controls">
-                                <select id="calendarAudioSelect" class="audio-select">
-                                    <option value="gather-notificator-audio.mp3">Áudio Padrão</option>
-                                    <option value="gather-notificator-audio2.wav">Áudio Alternativo</option>
-                                </select>
-                                <button class="audio-play-btn" data-audio="calendar" aria-label="Testar áudio">
+                                <select id="calendarAudioSelect" class="audio-select"></select>
+                                <button class="audio-play-btn" data-audio="calendar" data-i18n-aria="testAudio">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.5 2.5L12.5 8L3.5 13.5V2.5Z" fill="currentColor"/>
                                     </svg>
@@ -198,13 +230,14 @@
                 </div>
                 <div class="content-body-profile" style="display: none;">
                     <div class="content-body-profile-item">
-                        <div class="content-body-profile-item-title">
-                        </div>
+                        <div class="content-body-profile-item-title"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../assets/shared/constants.js"></script>
+    <script src="../assets/shared/utils.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>
