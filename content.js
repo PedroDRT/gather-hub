@@ -206,6 +206,15 @@
     );
   }
 
+  // The activity feed re-renders every past message in the DOM, which would
+  // otherwise be picked up by the observer as a brand new notification.
+  // Path looks like /app/<spaceId>/activity-feed/chat[/<userId>] so matching
+  // the pathname avoids any querystring/hash edge cases.
+  function isViewingActivityFeed() {
+    const path = window.location.pathname || '';
+    return path.includes('/activity-feed/');
+  }
+
   async function isEnabled(key) {
     const result = await chrome.storage.local.get(key);
     return result[key] !== false;
@@ -270,6 +279,10 @@
 
   function checkText(text, node) {
     if (!text || text.trim().length === 0) return;
+    if (isViewingActivityFeed()) {
+      logger.log('[GH] skipped: viewing activity feed', window.location.pathname);
+      return;
+    }
 
     const wave = extractMatch(text, NOTIFICATION_PATTERNS.wave);
     if (wave) return handleWave(text, wave, node);
