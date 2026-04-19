@@ -16,7 +16,7 @@
 
 ## 📋 Sobre o Projeto
 
-**Gather Hub** é uma extensão para Chrome que transforma sua experiência no Gather.town, fornecendo um sistema completo de notificações com áudios personalizados e interface moderna. Nunca mais perca uma interação importante!
+**Gather Hub** é uma extensão para Chrome que transforma sua experiência no Gather.town, fornecendo um sistema completo de notificações com áudios personalizados, modo concentração, histórico filtrado e interface moderna. Nunca mais perca uma interação importante!
 
 ## ✨ Funcionalidades
 
@@ -29,6 +29,8 @@
 - **Notificações de Chat**
   - Seja avisado quando receber mensagens no chat
   - Permaneça informado mesmo fora da aba
+  - O **avatar do remetente** aparece no toast do sistema
+  - O texto da mensagem é exibido junto, sem botões de "Visualizar/Ignorar" e sem texto duplicado
 
 - **Notificações de Chamada**
   - Alertas quando alguém iniciar uma chamada
@@ -38,6 +40,29 @@
   - Integração com Google Calendar
   - Configure o tempo de antecedência (0-5 minutos)
   - Receba lembretes de eventos importantes
+
+- **Sem ruído no histórico do Gather**
+  - Quando você está na visualização `activity-feed/chat` (histórico de mensagens), as mensagens antigas não disparam notificações novas
+
+### 🧘 Modo Concentração
+
+- Silencia **todos** os tipos de notificação enquanto está ativo
+- Timer configurável: **15 min, 30 min, 1 h, 2 h ou indefinido**
+- Contagem regressiva visível no menu de configurações
+- Badge `C` laranja no ícone da extensão indica que o modo está ligado
+
+### 🔢 Badge de não-lidas
+
+- Contador no ícone da extensão mostra **quantas notificações chegaram desde a última vez que você abriu o popup** (vai até `99+`)
+- Reseta automaticamente ao abrir o popup
+- Background vermelho para diferenciar do badge `C` (concentração)
+
+### 🕓 Histórico de notificações
+
+- Aba dedicada no segmented control com as **últimas 30 notificações** recebidas
+- Cada item mostra avatar do remetente, nome, mensagem (quando aplicável), tipo e tempo relativo (`agora`, `5m`, `2h`, `3d`)
+- **Filtros por tipo:** `Todas / Acenar / Chat / Chamada / Calendário`
+- Botão para limpar o histórico inteiro
 
 ### 🎵 Sistema de Áudio Personalizado
 
@@ -51,15 +76,16 @@
 - **Configuração Individual:**
   - Selecione áudio específico para cada tipo de notificação
   - Teste o áudio antes de salvar
+  - **Slider de volume global** (0–100%) com preview imediato
   - Reprodução usando Offscreen API para melhor performance
 
 ### 🎨 Interface Moderna
 
 - **Popup Centralizado:**
   - Design moderno e intuitivo
-  - Navegação por abas (Notificações, Áudio, Bind)
+  - Navegação por abas (Notificações, Áudio, Histórico)
   - Toggles elegantes para configurações
-  - Suporte completo a temas
+  - Tema claro / escuro com toggle no menu
 
 - **Welcome Page:**
   - Onboarding para novos usuários
@@ -67,32 +93,40 @@
 
 ### 🌍 Multi-idioma
 
-- Português (Brasil) - Padrão
+- Português (Brasil) – Padrão
 - Inglês (English)
 - Espanhol (Español)
+- Troca de idioma **em tempo real** no popup, sem reiniciar o Chrome
 
 ### ⚙️ Recursos Avançados
 
 - **Persistência de Configurações:**
-  - Todas as preferências são salvas localmente
-  - Sincronização automática entre sessões
+  - Todas as preferências são salvas localmente (`chrome.storage.local`)
+  - Estado restaurado entre reinicializações do navegador
 
 - **Detecção Inteligente:**
   - Extração automática de informações do usuário
   - Identificação de avatar e nome
+  - Suporte a SVG e PNG no avatar com sanitização contra XSS
   - Suporte para múltiplas versões do Gather.town
+
+- **Service Worker robusto:**
+  - Estado de notificação persistido em `chrome.storage.session` para sobreviver à hibernação do worker
+  - Concentração agendada via `chrome.alarms` (não depende do worker estar vivo)
 
 ## 🚀 Instalação
 
 ### Método 1: Instalação Manual (Desenvolvimento)
 
 1. **Clone o repositório:**
+
    ```bash
    git clone https://github.com/PedroDRT/gather-hub.git
    cd gather-hub
    ```
 
 2. **Abra o Chrome e vá para:**
+
    ```
    chrome://extensions/
    ```
@@ -123,17 +157,25 @@ A extensão será disponibilizada na Chrome Web Store em breve.
 
 4. **Personalize os Áudios:**
    - Navegue até a aba "Áudio"
+   - Ajuste o volume global no slider
    - Selecione o áudio para cada tipo de notificação
    - Teste usando o botão de play ▶️
 
-5. **Configure Atalhos (Bind):**
-   - Navegue até a aba "Bind"
-   - Configure atalhos personalizados (em desenvolvimento)
+5. **Acompanhe o histórico:**
+   - Navegue até a aba "Histórico"
+   - Use os filtros para ver apenas um tipo (chats, chamadas, etc.)
+   - Limpe a lista quando quiser começar do zero
+
+6. **Ative o Modo Concentração quando precisar de foco:**
+   - Abra o menu ⚙️ (ícone de engrenagem)
+   - Ative o toggle de "Concentração"
+   - Escolha a duração (ou deixe indefinido)
 
 ### Uso Diário
 
-- As notificações aparecerão automaticamente conforme configurado
-- Clique na notificação para focar na aba do Gather.town
+- As notificações aparecem automaticamente conforme configurado
+- O contador no ícone mostra quantas chegaram desde a última visualização
+- Clique na notificação do sistema para focar a aba do Gather
 - Todas as configurações são salvas automaticamente
 
 ## 🛠️ Desenvolvimento
@@ -146,7 +188,10 @@ gather-hub/
 │   ├── audio/          # Arquivos de áudio para notificações
 │   ├── icons/          # Ícones da extensão
 │   ├── images/         # Imagens e avatares
-│   └── shared/         # Utilitários compartilhados
+│   └── shared/         # Constantes e utilitários compartilhados
+│       ├── constants.js
+│       ├── utils.js
+│       └── global.css
 ├── popup/              # Interface do popup
 │   ├── popup.html
 │   ├── popup.css
@@ -159,9 +204,13 @@ gather-hub/
 │   ├── pt_BR/
 │   ├── en/
 │   └── es/
-├── background.js       # Service Worker
-├── content.js          # Content Script
-├── offscreen.js        # Offscreen Document (áudio)
+├── scripts/            # Scripts auxiliares (zip, bump-version)
+├── background.js       # Service Worker (notificações, badge, alarms)
+├── content.js          # Content Script (detecção no DOM)
+├── offscreen.html      # Documento offscreen para áudio
+├── offscreen.js
+├── eslint.config.js    # Configuração do ESLint
+├── .prettierrc.json    # Configuração do Prettier
 └── manifest.json       # Manifesto da extensão
 ```
 
@@ -171,22 +220,30 @@ gather-hub/
 - **JavaScript (ES6+)**
 - **HTML5 & CSS3**
 - **Offscreen API** (reprodução de áudio)
-- **Chrome Storage API** (persistência)
+- **Chrome Storage API** (persistência local + sessão)
 - **Chrome Notifications API**
+- **Chrome Alarms API** (timer do modo concentração)
+- **ESLint + Prettier** (DX)
 
 ### Requisitos
 
 - Chrome 88+ ou Edge 88+
 - Acesso ao Gather.town (app.v2.gather.town)
+- Node.js 18+ (apenas para scripts de desenvolvimento)
 
 ### Scripts Disponíveis
 
 ```bash
-# Versão automática baseada em commits
-npm run bump-version
+npm run lint           # Roda o ESLint em todos os .js
+npm run lint:fix       # Corrige problemas auto-fixáveis
+npm run format         # Formata todos os arquivos com Prettier
+npm run format:check   # Verifica formatação sem alterar
+npm run zip            # Empacota a extensão em um .zip
+npm run bump-version   # Versão automática baseada em commits
 ```
 
 O projeto utiliza versionamento semântico automático baseado em tipos de commit:
+
 - `feat:` → Incrementa MINOR (1.0.0 → 1.1.0)
 - `fix:` → Incrementa PATCH (1.0.0 → 1.0.1)
 - `chore:` → Incrementa PATCH (1.0.0 → 1.0.1)
